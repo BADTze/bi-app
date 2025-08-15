@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import {
   Table,
   TableBody,
@@ -126,7 +125,7 @@ const ForecastPage: React.FC = () => {
         <div className="w-full border-2 rounded-lg p-2 shadow-md">
           <div className="flex justify-between">
             <h3 className="font-bold text-lg">Forecast vs Actual (GJ/Kl)</h3>
-            <div className="inline-flex rounded-md border-2 p-0.5 shadow-sm gap-1" >
+            <div className="inline-flex rounded-md border-2 p-0.5 shadow-sm gap-1 items-center" >
               <Button variant="mine">Model 1</Button>
               <Button variant="mine">Model 2</Button>
             </div>

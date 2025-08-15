@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from "./ui/button";
 
 const FilterBar: React.FC = () => {
   const [mode, setMode] = useState("monthly");
@@ -52,13 +53,9 @@ const FilterBar: React.FC = () => {
       </select>
 
       {/* Submit Button */}
-      <button
-        onClick={handleSubmit}
-        className="text-sm rounded-full px-4 bg-yellow-400 text-black hover:bg-yellow-500"
-        style={{ height: "36px" }}
-      >
+      <Button variant="mine" onClick={handleSubmit} className="ml-2">
         Submit
-      </button>
+      </Button>
     </div>
   );
 };
