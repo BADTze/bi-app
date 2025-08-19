@@ -1,59 +1,66 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "./ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"; // pastikan path ini sesuai
 
-const FilterBar: React.FC = () => {
-  const [mode, setMode] = useState("monthly");
-  const [year, setYear] = useState("2025");
-  const [category, setCategory] = useState("indexEnergy");
+interface FilterBarProps {
+  category: string;
+  setCategory: (cat: string) => void;
+  year: string;
+  setYear: (yr: string) => void;
+  years: string[];
+  onSubmit: () => void;
+}
 
-  const handleSubmit = () => {
-    console.log({
-      mode,
-      year,
-      category,
-    });
-  };
-
+const FilterBar: React.FC<FilterBarProps> = ({
+  category,
+  setCategory,
+  year,
+  setYear,
+  years,
+  onSubmit,
+}) => {
   return (
     <div className="flex flex-wrap items-center gap-2 p-2">
-      {/* Mode Select */}
-      <select
-        value={mode}
-        onChange={(e) => setMode(e.target.value)}
-        className="rounded px-3 text-sm border border-gray-300"
-        style={{ width: "140px", height: "36px" }}
-      >
-        <option value="monthly">Monthly</option>
-        <option value="yearly">Yearly</option>
-      </select>
-
-      {/* Year Select */}
-      <select
-        value={year}
-        onChange={(e) => setYear(e.target.value)}
-        className="rounded px-3 text-sm border border-gray-300"
-        style={{ width: "120px", height: "36px" }}
-      >
-        <option value="2022">2022</option>
-        <option value="2023">2023</option>
-        <option value="2024">2024</option>
-        <option value="2025">2025</option>
-      </select>
-
       {/* Category Select */}
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="rounded px-3 text-sm border border-gray-300"
-        style={{ width: "180px", height: "36px" }}
-      >
-        <option value="indexEnergy">Index Energy</option>
-        <option value="electricity">Electricity</option>
-        <option value="naturalGas">Natural Gas</option>
-      </select>
+      <Select value={category} onValueChange={setCategory}>
+        <SelectTrigger className="w-[180px] h-[36px] rounded px-3 text-sm border border-gray-300">
+          <SelectValue placeholder="Pilih Kategori" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="indexEnergy">Index Energy</SelectItem>
+          <SelectItem value="electricity">Electricity</SelectItem>
+          <SelectItem value="naturalGas">Natural Gas</SelectItem>
+        </SelectContent>
+      </Select>
+
+      {/* Year Select (dynamic) */}
+      <Select value={year} onValueChange={setYear}>
+        <SelectTrigger className="w-[120px] h-[36px] rounded px-3 text-sm border border-gray-300">
+          <SelectValue placeholder="Pilih Tahun" />
+        </SelectTrigger>
+        <SelectContent>
+          {years.length > 0 ? (
+            years.map((yr) => (
+              <SelectItem key={yr} value={yr}>
+                {yr}
+              </SelectItem>
+            ))
+          ) : (
+            <SelectItem value="no_years" disabled>
+              No Years
+            </SelectItem>
+          )}
+        </SelectContent>
+      </Select>
 
       {/* Submit Button */}
-      <Button variant="mine" onClick={handleSubmit} className="ml-2">
+      <Button variant="mine" onClick={onSubmit} className="ml-2">
         Submit
       </Button>
     </div>

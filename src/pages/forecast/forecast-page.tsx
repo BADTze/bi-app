@@ -7,28 +7,121 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
 import type { Data, Layout } from "plotly.js";
-import { Button } from "@/components/ui/button";
 import FilterBar from "@/components/filter-bar";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+interface ForecastRow {
+  date: string;
+  forecastValue: number;
+  upperValue: number;
+  lowerValue: number;
+}
+
+interface ActualRow {
+  date: string;
+  value: number;
+}
 
 const ForecastPage: React.FC = () => {
+  const [model, setModel] = useState("prophet");
+  const [category, setCategory] = useState("indexEnergy");
+  const [year, setYear] = useState("2025");
+  const [availableYears, setAvailableYears] = useState<string[]>([]);
+
+  const [forecastData, setForecastData] = useState<ForecastRow[]>([]);
+  const [actualData, setActualData] = useState<ActualRow[]>([]);
+
+  // fetch forecast dari Flask API
+  const fetchForecast = async () => {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:5000/bi-apps/api/forecast?model=${model}&category=${category}&year=${year}`
+      );
+      const data = await res.json();
+
+      const mapped: ForecastRow[] = data.forecast.map((item: any) => ({
+        date: item.ds.slice(0, 7),
+        forecastValue: item.yhat,
+        upperValue: item.yhat_upper,
+        lowerValue: item.yhat_lower,
+      }));
+
+      setForecastData(mapped);
+    } catch (err) {
+      console.error("Error fetching forecast:", err);
+    }
+  };
+
+  // fetch actual data
+  const fetchRawData = async () => {
+    try {
+      const res = await fetch(`http://127.0.0.1:5000/bi-apps/api/raw_data`);
+      const data = await res.json();
+
+      if (Array.isArray(data)) {
+        // ambil daftar tahun unik untuk dropdown
+        const years = [...new Set(data.map((item: any) => item.year))];
+        setAvailableYears(years);
+
+        // filter sesuai tahun terpilih
+        const filtered = data.filter((item: any) => item.year === year);
+
+        const mapped: ActualRow[] = filtered.map((item: any) => ({
+          date: `${item.year}-${item.month.padStart(2, "0")}`,
+          value: item.values[category],
+        }));
+
+        setActualData(mapped);
+      }
+    } catch (err) {
+      console.error("Error fetching actual data:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchForecast();
+    fetchRawData();
+  }, [model, category, year]);
+
+  // chart data gabungan
   const chartData: Data[] = [
     {
-      x: ["2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06"],
-      y: [120, 130, 125, 140, 150, 145],
+      x: forecastData.map((d) => d.date),
+      y: forecastData.map((d) => d.forecastValue),
+      name: "Forecast",
       type: "scatter",
       mode: "lines+markers",
-      name: "Forecast",
       line: { color: "#3b82f6" },
     },
     {
-      x: ["2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06"],
-      y: [118, 132, 128, 138, 148, 147],
+      x: forecastData.map((d) => d.date),
+      y: forecastData.map((d) => d.upperValue),
+      name: "Forecast Upper",
+      type: "scatter",
+      mode: "lines",
+      line: { color: "rgba(0,0,255,0.2)", dash: "dot" },
+      showlegend: true,
+    },
+    {
+      x: forecastData.map((d) => d.date),
+      y: forecastData.map((d) => d.lowerValue),
+      name: "Forecast Lower",
+      type: "scatter",
+      mode: "lines",
+      line: { color: "rgba(0,0,255,0.2)", dash: "dot" },
+      showlegend: true,
+    },
+    {
+      x: actualData.map((d) => d.date),
+      y: actualData.map((d) =>
+        typeof d.value === "number" ? Number(d.value.toFixed(2)) : null
+      ),
+      name: "Actual",
       type: "scatter",
       mode: "lines+markers",
-      name: "Actual",
       line: { color: "#f97316" },
     },
   ];
@@ -38,99 +131,45 @@ const ForecastPage: React.FC = () => {
     yaxis: { title: { text: "Value" } },
     paper_bgcolor: "transparent",
     plot_bgcolor: "transparent",
+    legend: { orientation: "h", y: -0.2 },
   };
-
-  const forecastDataDummy = [
-    {
-      date: "2024-07",
-      forecastValue: 155,
-      upperValue: 160,
-      lowerValue: 150,
-    },
-    {
-      date: "2024-08",
-      forecastValue: 165,
-      upperValue: 172,
-      lowerValue: 158,
-    },
-    {
-      date: "2024-09",
-      forecastValue: 170,
-      upperValue: 178,
-      lowerValue: 162,
-    },
-    {
-      date: "2024-10",
-      forecastValue: 175,
-      upperValue: 185,
-      lowerValue: 165,
-    },
-    {
-      date: "2024-11",
-      forecastValue: 180,
-      upperValue: 190,
-      lowerValue: 170,
-    },
-    {
-      date: "2024-12",
-      forecastValue: 195,
-      upperValue: 205,
-      lowerValue: 185,
-    },
-  ];
-
-  const comparisonDataDummy = [
-    {
-      date: "2024-01",
-      forecastValue: 120,
-      actualValue: 118,
-    },
-    {
-      date: "2024-02",
-      forecastValue: 130,
-      actualValue: 132,
-    },
-    {
-      date: "2024-03",
-      forecastValue: 125,
-      actualValue: 128,
-    },
-    {
-      date: "2024-04",
-      forecastValue: 140,
-      actualValue: 138,
-    },
-    {
-      date: "2024-05",
-      forecastValue: 150,
-      actualValue: 148,
-    },
-    {
-      date: "2024-06",
-      forecastValue: 145,
-      actualValue: 147,
-    },
-  ];
-
-  const forecastData = forecastDataDummy;
-  const comparisonData = comparisonDataDummy;
 
   return (
     <div className="flex p-4">
       <div className="flex w-full flex-wrap gap-2">
+        {/* Header */}
         <div className="w-full mb-2 h-15 content-center border-2 rounded-lg p-2">
           <h2 className="uppercase font-bold">Forecast Pages</h2>
         </div>
 
-        <div className="w-full border-2 rounded-lg p-2 shadow-md">
-          <div className="flex justify-between">
+        {/* Chart Card */}
+        <div className="w-full bg-gray-200 border-2 rounded-lg p-2 shadow-md">
+          <div className="flex justify-between items-center mb-2">
             <h3 className="font-bold text-lg">Forecast vs Actual (GJ/Kl)</h3>
-            <div className="inline-flex rounded-md border-2 p-0.5 shadow-sm gap-1 items-center" >
-              <Button variant="mine">Model 1</Button>
-              <Button variant="mine">Model 2</Button>
-            </div>
-            <div><FilterBar/></div>
+
+            {/* Model Tabs */}
+            <Tabs value={model} onValueChange={setModel}>
+              <TabsList className="rounded-md border-2 p-0.5 shadow-sm gap-1">
+                <TabsTrigger value="prophet">Model 1</TabsTrigger>
+                <TabsTrigger value="sarimax">Model 2</TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {/* Filter Bar */}
+            <FilterBar
+              category={category}
+              setCategory={setCategory}
+              year={year}
+              setYear={setYear}
+              years={availableYears}
+              onSubmit={() => {
+                fetchForecast();
+                fetchRawData();
+              }}
+            />
           </div>
+
+          {/* Chart */}
           <Plot
             data={chartData}
             layout={chartLayout}
@@ -138,6 +177,7 @@ const ForecastPage: React.FC = () => {
           />
         </div>
 
+        {/* Model Summary */}
         <div className="flex flex-wrap gap-2 w-full mt-2">
           <Card className="flex-1">
             <CardHeader>
@@ -168,6 +208,7 @@ const ForecastPage: React.FC = () => {
           </Card>
         </div>
 
+        {/* Data Tables */}
         <div className="flex flex-wrap gap-4 w-full mt-2">
           {/* Forecast Data Table */}
           <Card className="flex-1 min-w-[300px]">
@@ -185,14 +226,24 @@ const ForecastPage: React.FC = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {forecastData.map((data, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">{data.date}</TableCell>
-                      <TableCell>{data.forecastValue}</TableCell>
-                      <TableCell>{data.upperValue}</TableCell>
-                      <TableCell>{data.lowerValue}</TableCell>
+                  {forecastData.length > 0 ? (
+                    forecastData.map((row, i) => (
+                      <TableRow key={i}>
+                        <TableCell className="font-medium">
+                          {row.date}
+                        </TableCell>
+                        <TableCell>{row.forecastValue.toFixed(2)}</TableCell>
+                        <TableCell>{row.upperValue.toFixed(2)}</TableCell>
+                        <TableCell>{row.lowerValue.toFixed(2)}</TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center">
+                        No data available
+                      </TableCell>
                     </TableRow>
-                  ))}
+                  )}
                 </TableBody>
               </Table>
             </CardContent>
@@ -213,13 +264,20 @@ const ForecastPage: React.FC = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {comparisonData.map((data, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">{data.date}</TableCell>
-                      <TableCell>{data.forecastValue}</TableCell>
-                      <TableCell>{data.actualValue}</TableCell>
-                    </TableRow>
-                  ))}
+                  {forecastData.map((f, i) => {
+                    const actual = actualData.find((a) => a.date === f.date);
+                    return (
+                      <TableRow key={i}>
+                        <TableCell className="font-medium">{f.date}</TableCell>
+                        <TableCell>{f.forecastValue.toFixed(2)}</TableCell>
+                        <TableCell>
+                          {actual && typeof actual.value === "number"
+                            ? actual.value.toFixed(2)
+                            : "-"}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </CardContent>
