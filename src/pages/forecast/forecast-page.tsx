@@ -126,6 +126,36 @@ const ForecastPage: React.FC = () => {
     },
   ];
 
+  function getStats(data: number[]) {
+    const cleanData = data.filter((v) => v > 0); 
+    if (cleanData.length === 0) return { min: 0, max: 0, avg: 0 };
+
+    const min = Math.min(...cleanData);
+    const max = Math.max(...cleanData);
+    const avg = cleanData.reduce((a, b) => a + b, 0) / cleanData.length;
+
+    return {
+      min: min.toFixed(2),
+      max: max.toFixed(2),
+      avg: avg.toFixed(2),
+    };
+  }
+
+  const actualValues = actualData.map((d) => d.value);
+  const forecastValues = forecastData.map((d) => d.forecastValue);
+
+  const actualStats = getStats(actualValues);
+  const forecastStats = getStats(forecastValues);
+
+  // 🔹 Hitung selisih %
+  let diffPercent = null;
+  if (Number(actualStats.avg) > 0) {
+    diffPercent =
+      ((Number(forecastStats.avg) - Number(actualStats.avg)) /
+        Number(actualStats.avg)) *
+      100;
+  }
+
   const chartLayout: Partial<Layout> = {
     xaxis: { title: { text: "Month" } },
     yaxis: { title: { text: "Value" } },
@@ -135,13 +165,8 @@ const ForecastPage: React.FC = () => {
   };
 
   return (
-    <div className="flex p-4">
+    <div className="flex w-full">
       <div className="flex w-full flex-wrap gap-2">
-        {/* Header */}
-        <div className="w-full mb-2 h-15 content-center border-2 rounded-lg p-2">
-          <h2 className="uppercase font-bold">Forecast Pages</h2>
-        </div>
-
         {/* Chart Card */}
         <div className="w-full bg-gray-200 border-2 rounded-lg p-2 shadow-md">
           <div className="flex justify-between items-center mb-2">
@@ -188,22 +213,58 @@ const ForecastPage: React.FC = () => {
               model.
             </CardContent>
           </Card>
-          <Card className="flex-1">
+
+          <Card className="flex-1 w-60">
             <CardHeader>
-              <CardTitle>Summary Forecast</CardTitle>
+              <CardTitle>Summary</CardTitle>
             </CardHeader>
             <CardContent>
-              This section contains evaluation metrics for the forecasting
-              model.
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="text-left border-b">
+                    <th className="py-1">Metric</th>
+                    <th className="py-1">Actual</th>
+                    <th className="py-1">Forecast</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="py-1">Min</td>
+                    <td>{actualStats.min}</td>
+                    <td>{forecastStats.min}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Max</td>
+                    <td>{actualStats.max}</td>
+                    <td>{forecastStats.max}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Avg</td>
+                    <td>{actualStats.avg}</td>
+                    <td>{forecastStats.avg}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {diffPercent !== null && (
+                <div className="mt-3 text-xs text-gray-600">
+                  Forecast rata-rata{" "}
+                  {diffPercent > 0 ? "lebih tinggi" : "lebih rendah"}{" "}
+                  {Math.abs(diffPercent).toFixed(2)}% dibanding Actual.
+                </div>
+              )}
             </CardContent>
           </Card>
+
           <Card className="flex-1">
             <CardHeader>
-              <CardTitle>Summary Actual</CardTitle>
+              <CardTitle>Model</CardTitle>
             </CardHeader>
             <CardContent>
-              This section contains evaluation metrics for the forecasting
-              model.
+              <p className="text-sm text-gray-600">
+                Model yang digunakan:{" "}
+                {model === "prophet" ? "Prophet" : "SARIMAX"}
+              </p>
             </CardContent>
           </Card>
         </div>

@@ -5,11 +5,6 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex p-2">
       <div className="flex w-full flex-wrap">
-        <div className="w-full mb-3 border-1 h-15 content-center rounded-2xl p-2">
-          <h2 className="uppercase font-bold">Apps Title</h2>
-          
-        </div>
-
         <div className="w-96 p-1">
           <Card>
             <CardHeader>
