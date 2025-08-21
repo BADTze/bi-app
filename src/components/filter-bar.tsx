@@ -6,7 +6,7 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select"; // pastikan path ini sesuai
+} from "@/components/ui/select";
 
 interface FilterBarProps {
   category: string;
