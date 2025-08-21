@@ -34,6 +34,9 @@ const ForecastPage: React.FC = () => {
   const [forecastData, setForecastData] = useState<ForecastRow[]>([]);
   const [actualData, setActualData] = useState<ActualRow[]>([]);
 
+  // tambahkan state untuk warning
+  const [forecastWarning, setForecastWarning] = useState("");
+
   // fetch forecast dari Flask API
   const fetchForecast = async () => {
     try {
@@ -41,6 +44,16 @@ const ForecastPage: React.FC = () => {
         `http://127.0.0.1:5000/bi-apps/api/forecast?model=${model}&category=${category}&year=${year}`
       );
       const data = await res.json();
+
+      if (!data.forecast || data.forecast.length < 6) {
+        setForecastWarning(
+          "⚠️ Model tidak bisa membaca Data Terlalu sedikit data observasi untuk memperkirakan parameter musiman."
+        );
+        setForecastData([]);
+        return;
+      } else {
+        setForecastWarning("");
+      }
 
       const mapped: ForecastRow[] = data.forecast.map((item: any) => ({
         date: item.ds.slice(0, 7),
@@ -51,6 +64,10 @@ const ForecastPage: React.FC = () => {
 
       setForecastData(mapped);
     } catch (err) {
+      setForecastWarning(
+        "⚠️ Model tidak bisa membaca Data Terlalu sedikit data observasi untuk memperkirakan parameter musiman."
+      );
+      setForecastData([]);
       console.error("Error fetching forecast:", err);
     }
   };
@@ -117,7 +134,9 @@ const ForecastPage: React.FC = () => {
     {
       x: actualData.map((d) => d.date),
       y: actualData.map((d) =>
-        typeof d.value === "number" ? Number(d.value.toFixed(2)) : null
+        typeof d.value === "number" && d.value !== 0
+          ? Number(d.value.toFixed(2))
+          : null
       ),
       name: "Actual",
       type: "scatter",
@@ -127,7 +146,7 @@ const ForecastPage: React.FC = () => {
   ];
 
   function getStats(data: number[]) {
-    const cleanData = data.filter((v) => v > 0); 
+    const cleanData = data.filter((v) => v > 0);
     if (cleanData.length === 0) return { min: 0, max: 0, avg: 0 };
 
     const min = Math.min(...cleanData);
@@ -194,6 +213,13 @@ const ForecastPage: React.FC = () => {
             />
           </div>
 
+          {/* Warning */}
+          {forecastWarning && (
+            <div className="mb-2 p-2 bg-yellow-100 text-yellow-800 rounded text-sm">
+              {forecastWarning}
+            </div>
+          )}
+
           {/* Chart */}
           <Plot
             data={chartData}
@@ -258,14 +284,9 @@ const ForecastPage: React.FC = () => {
 
           <Card className="flex-1">
             <CardHeader>
-              <CardTitle>Model</CardTitle>
+              <CardTitle>Content</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">
-                Model yang digunakan:{" "}
-                {model === "prophet" ? "Prophet" : "SARIMAX"}
-              </p>
-            </CardContent>
+            <CardContent>Content 2</CardContent>
           </Card>
         </div>
 
@@ -325,20 +346,43 @@ const ForecastPage: React.FC = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {forecastData.map((f, i) => {
-                    const actual = actualData.find((a) => a.date === f.date);
-                    return (
-                      <TableRow key={i}>
-                        <TableCell className="font-medium">{f.date}</TableCell>
-                        <TableCell>{f.forecastValue.toFixed(2)}</TableCell>
-                        <TableCell>
-                          {actual && typeof actual.value === "number"
-                            ? actual.value.toFixed(2)
-                            : "-"}
+                  {(() => {
+                    // Gabungkan tanggal unik dari forecastData dan actualData
+                    const allDates = Array.from(
+                      new Set([
+                        ...forecastData.map((f) => f.date),
+                        ...actualData.map((a) => a.date),
+                      ])
+                    ).sort();
+
+                    return allDates.length > 0 ? (
+                      allDates.map((date, i) => {
+                        const forecast = forecastData.find((f) => f.date === date);
+                        const actual = actualData.find((a) => a.date === date);
+                        return (
+                          <TableRow key={i}>
+                            <TableCell className="font-medium">{date}</TableCell>
+                            <TableCell>
+                              {forecast && typeof forecast.forecastValue === "number"
+                                ? forecast.forecastValue.toFixed(2)
+                                : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {actual && typeof actual.value === "number"
+                                ? actual.value.toFixed(2)
+                                : "-"}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={3} className="text-center">
+                          No data available
                         </TableCell>
                       </TableRow>
                     );
-                  })}
+                  })()}
                 </TableBody>
               </Table>
             </CardContent>
