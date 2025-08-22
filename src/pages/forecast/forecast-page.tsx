@@ -33,6 +33,11 @@ const ForecastPage: React.FC = () => {
   const [forecastData, setForecastData] = useState<ForecastRow[]>([]);
   const [actualData, setActualData] = useState<ActualRow[]>([]);
   const [forecastWarning, setForecastWarning] = useState("");
+  const [evaluation, setEvaluation] = useState<{
+    mae: number;
+    rmse: number;
+    mape: number;
+  } | null>(null);
 
   // fetch forecast dari Flask API
   const fetchForecast = async () => {
@@ -59,10 +64,9 @@ const ForecastPage: React.FC = () => {
         lowerValue: item.yhat_lower !== null ? Number(item.yhat_lower) : null,
       }));
       setForecastData(mapped);
-      
     } catch (err) {
       setForecastWarning(
-        "⚠️ Model tidak bisa membaca Data Terlalu sedikit data observasi untuk memperkirakan parameter musiman."
+        "⚠️ Terlalu sedikit data observasi untuk memperkirakan parameter musiman. Model tidak bisa membaca  "
       );
       setForecastData([]);
       console.error("Error fetching forecast:", err);
@@ -95,9 +99,31 @@ const ForecastPage: React.FC = () => {
     }
   };
 
+  const fetchEvaluation = async () => {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:5000/bi-apps/api/evaluation?model=${model}&category=${category}&year=${year}`
+      );
+      const data = await res.json();
+      if (!data.error) {
+        setEvaluation({
+          mae: data.mae,
+          rmse: data.rmse,
+          mape: data.mape,
+        });
+      } else {
+        setEvaluation(null);
+      }
+    } catch (err) {
+      console.error("Error fetching evaluation:", err);
+      setEvaluation(null);
+    }
+  };
+
   useEffect(() => {
     fetchForecast();
     fetchRawData();
+    fetchEvaluation();
   }, [model, category, year]);
 
   // chart data gabungan
@@ -159,7 +185,6 @@ const ForecastPage: React.FC = () => {
 
   const actualValues = actualData.map((d) => d.value);
   const forecastValues = forecastData.map((d) => d.forecastValue);
-
   const actualStats = getStats(actualValues);
   const forecastStats = getStats(forecastValues);
 
@@ -233,8 +258,28 @@ const ForecastPage: React.FC = () => {
               <CardTitle>Model Evaluation</CardTitle>
             </CardHeader>
             <CardContent>
-              This section contains evaluation metrics for the forecasting
-              model.
+              {evaluation ? (
+                <table className="w-full text-sm border-collapse">
+                  <tbody>
+                    <tr>
+                      <td className="py-1">MAE</td>
+                      <td>{evaluation.mae}</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1">RMSE</td>
+                      <td>{evaluation.rmse}</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1">MAPE (%)</td>
+                      <td>{evaluation.mape}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              ) : (
+                <p className="text-sm text-gray-500">
+                  No evaluation data available
+                </p>
+              )}
             </CardContent>
           </Card>
 
