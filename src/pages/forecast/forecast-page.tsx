@@ -30,11 +30,8 @@ const ForecastPage: React.FC = () => {
   const [category, setCategory] = useState("indexEnergy");
   const [year, setYear] = useState("2025");
   const [availableYears, setAvailableYears] = useState<string[]>([]);
-
   const [forecastData, setForecastData] = useState<ForecastRow[]>([]);
   const [actualData, setActualData] = useState<ActualRow[]>([]);
-
-  // tambahkan state untuk warning
   const [forecastWarning, setForecastWarning] = useState("");
 
   // fetch forecast dari Flask API
@@ -57,12 +54,12 @@ const ForecastPage: React.FC = () => {
 
       const mapped: ForecastRow[] = data.forecast.map((item: any) => ({
         date: item.ds.slice(0, 7),
-        forecastValue: item.yhat,
-        upperValue: item.yhat_upper,
-        lowerValue: item.yhat_lower,
+        forecastValue: item.yhat !== null ? Number(item.yhat) : null,
+        upperValue: item.yhat_upper !== null ? Number(item.yhat_upper) : null,
+        lowerValue: item.yhat_lower !== null ? Number(item.yhat_lower) : null,
       }));
-
       setForecastData(mapped);
+      
     } catch (err) {
       setForecastWarning(
         "⚠️ Model tidak bisa membaca Data Terlalu sedikit data observasi untuk memperkirakan parameter musiman."
@@ -196,6 +193,7 @@ const ForecastPage: React.FC = () => {
               <TabsList className="rounded-md border-2 p-0.5 shadow-sm gap-1">
                 <TabsTrigger value="prophet">Model 1</TabsTrigger>
                 <TabsTrigger value="sarimax">Model 2</TabsTrigger>
+                <TabsTrigger value="linear">Model 3</TabsTrigger>
               </TabsList>
             </Tabs>
 
@@ -357,13 +355,18 @@ const ForecastPage: React.FC = () => {
 
                     return allDates.length > 0 ? (
                       allDates.map((date, i) => {
-                        const forecast = forecastData.find((f) => f.date === date);
+                        const forecast = forecastData.find(
+                          (f) => f.date === date
+                        );
                         const actual = actualData.find((a) => a.date === date);
                         return (
                           <TableRow key={i}>
-                            <TableCell className="font-medium">{date}</TableCell>
+                            <TableCell className="font-medium">
+                              {date}
+                            </TableCell>
                             <TableCell>
-                              {forecast && typeof forecast.forecastValue === "number"
+                              {forecast &&
+                              typeof forecast.forecastValue === "number"
                                 ? forecast.forecastValue.toFixed(2)
                                 : "-"}
                             </TableCell>
