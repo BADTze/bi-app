@@ -49,7 +49,7 @@ const ForecastPage: React.FC = () => {
 
       if (!data.forecast || data.forecast.length < 6) {
         setForecastWarning(
-          "⚠️ Model tidak bisa membaca Data Terlalu sedikit data observasi untuk memperkirakan parameter musiman."
+          "⚠️ Model tidak bisa membaca Forecast Terlalu sedikit data observasi untuk memperkirakan parameter musiman."
         );
         setForecastData([]);
         return;
@@ -66,7 +66,7 @@ const ForecastPage: React.FC = () => {
       setForecastData(mapped);
     } catch (err) {
       setForecastWarning(
-        "⚠️ Terlalu sedikit data observasi untuk memperkirakan parameter musiman. Model tidak bisa membaca  "
+        "⚠️ Model tidak bisa membaca Forecast Terlalu sedikit data observasi untuk memperkirakan parameter musiman."
       );
       setForecastData([]);
       console.error("Error fetching forecast:", err);
@@ -80,11 +80,9 @@ const ForecastPage: React.FC = () => {
       const data = await res.json();
 
       if (Array.isArray(data)) {
-        // ambil daftar tahun unik untuk dropdown
         const years = [...new Set(data.map((item: any) => item.year))];
         setAvailableYears(years);
 
-        // filter sesuai tahun terpilih
         const filtered = data.filter((item: any) => item.year === year);
 
         const mapped: ActualRow[] = filtered.map((item: any) => ({
@@ -99,17 +97,18 @@ const ForecastPage: React.FC = () => {
     }
   };
 
+  // fetch Evaluation model
   const fetchEvaluation = async () => {
     try {
       const res = await fetch(
-        `http://127.0.0.1:5000/bi-apps/api/evaluation?model=${model}&category=${category}&year=${year}`
+        `http://127.0.0.1:5000/bi-apps/api/evaluation?model=${model}&category=${category}`
       );
       const data = await res.json();
-      if (!data.error) {
+      if (data.evaluation && !data.error) {
         setEvaluation({
-          mae: data.mae,
-          rmse: data.rmse,
-          mape: data.mape,
+          mae: data.evaluation.MAE,
+          rmse: data.evaluation.RMSE,
+          mape: data.evaluation.MAPE,
         });
       } else {
         setEvaluation(null);
@@ -168,6 +167,14 @@ const ForecastPage: React.FC = () => {
     },
   ];
 
+  const chartLayout: Partial<Layout> = {
+    xaxis: { title: { text: "Month" } },
+    yaxis: { title: { text: "Value" } },
+    paper_bgcolor: "transparent",
+    plot_bgcolor: "transparent",
+    legend: { orientation: "h", y: -0.2 },
+  };
+
   function getStats(data: number[]) {
     const cleanData = data.filter((v) => v > 0);
     if (cleanData.length === 0) return { min: 0, max: 0, avg: 0 };
@@ -196,14 +203,6 @@ const ForecastPage: React.FC = () => {
         Number(actualStats.avg)) *
       100;
   }
-
-  const chartLayout: Partial<Layout> = {
-    xaxis: { title: { text: "Month" } },
-    yaxis: { title: { text: "Value" } },
-    paper_bgcolor: "transparent",
-    plot_bgcolor: "transparent",
-    legend: { orientation: "h", y: -0.2 },
-  };
 
   return (
     <div className="flex w-full">
@@ -262,23 +261,23 @@ const ForecastPage: React.FC = () => {
                 <table className="w-full text-sm border-collapse">
                   <tbody>
                     <tr>
-                      <td className="py-1">MAE</td>
+                      <td className="py-1 font-medium">MAE</td>
                       <td>{evaluation.mae}</td>
                     </tr>
                     <tr>
-                      <td className="py-1">RMSE</td>
+                      <td className="py-1 font-medium">RMSE</td>
                       <td>{evaluation.rmse}</td>
                     </tr>
                     <tr>
-                      <td className="py-1">MAPE (%)</td>
+                      <td className="py-1 font-medium">MAPE</td>
                       <td>{evaluation.mape}</td>
                     </tr>
                   </tbody>
                 </table>
               ) : (
-                <p className="text-sm text-gray-500">
-                  No evaluation data available
-                </p>
+                <div className="text-gray-500 text-sm">
+                  No evaluation data available.
+                </div>
               )}
             </CardContent>
           </Card>
@@ -390,7 +389,6 @@ const ForecastPage: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {(() => {
-                    // Gabungkan tanggal unik dari forecastData dan actualData
                     const allDates = Array.from(
                       new Set([
                         ...forecastData.map((f) => f.date),
