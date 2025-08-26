@@ -15,9 +15,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ForecastRow {
   date: string;
-  forecastValue: number;
-  upperValue: number;
-  lowerValue: number;
+  forecastValue: number | null;
+  upperValue: number | null;
+  lowerValue: number | null;
 }
 
 interface ActualRow {
@@ -26,9 +26,16 @@ interface ActualRow {
 }
 
 const ForecastPage: React.FC = () => {
+  // 🔹 State aktif (dipakai fetch)
   const [model, setModel] = useState("prophet");
   const [category, setCategory] = useState("indexEnergy");
   const [year, setYear] = useState("2025");
+
+  // 🔹 State pending (UI sebelum submit)
+  const [pendingModel, setPendingModel] = useState("prophet");
+  const [pendingCategory, setPendingCategory] = useState("indexEnergy");
+  const [pendingYear, setPendingYear] = useState("2025");
+
   const [availableYears, setAvailableYears] = useState<string[]>([]);
   const [forecastData, setForecastData] = useState<ForecastRow[]>([]);
   const [actualData, setActualData] = useState<ActualRow[]>([]);
@@ -49,7 +56,7 @@ const ForecastPage: React.FC = () => {
 
       if (!data.forecast || data.forecast.length < 6) {
         setForecastWarning(
-          "⚠️ Model tidak bisa membaca Forecast Terlalu sedikit data observasi untuk memperkirakan parameter musiman."
+          "⚠️ Model tidak bisa membaca Forecast. Terlalu sedikit data observasi untuk memperkirakan parameter musiman."
         );
         setForecastData([]);
         return;
@@ -66,7 +73,7 @@ const ForecastPage: React.FC = () => {
       setForecastData(mapped);
     } catch (err) {
       setForecastWarning(
-        "⚠️ Model tidak bisa membaca Forecast Terlalu sedikit data observasi untuk memperkirakan parameter musiman."
+        "⚠️ Model tidak bisa membaca Forecast. Terlalu sedikit data observasi untuk memperkirakan parameter musiman."
       );
       setForecastData([]);
       console.error("Error fetching forecast:", err);
@@ -119,10 +126,16 @@ const ForecastPage: React.FC = () => {
     }
   };
 
+  // fetch raw data pertama kali
+  useEffect(() => {
+    fetchRawData();
+  }, []);
+
+  // fetch forecast + evaluation ketika model/category/year berubah
   useEffect(() => {
     fetchForecast();
-    fetchRawData();
     fetchEvaluation();
+    fetchRawData(); // kalau year/category berubah, raw data ikut ganti
   }, [model, category, year]);
 
   // chart data gabungan
@@ -191,7 +204,7 @@ const ForecastPage: React.FC = () => {
   }
 
   const actualValues = actualData.map((d) => d.value);
-  const forecastValues = forecastData.map((d) => d.forecastValue);
+  const forecastValues = forecastData.map((d) => d.forecastValue ?? 0);
   const actualStats = getStats(actualValues);
   const forecastStats = getStats(forecastValues);
 
@@ -213,7 +226,7 @@ const ForecastPage: React.FC = () => {
             <h3 className="font-bold text-lg">Forecast vs Actual (GJ/Kl)</h3>
 
             {/* Model Tabs */}
-            <Tabs value={model} onValueChange={setModel}>
+            <Tabs value={pendingModel} onValueChange={setPendingModel}>
               <TabsList className="rounded-md border-2 p-0.5 shadow-sm gap-1">
                 <TabsTrigger value="prophet">Model 1</TabsTrigger>
                 <TabsTrigger value="sarimax">Model 2</TabsTrigger>
@@ -223,14 +236,15 @@ const ForecastPage: React.FC = () => {
 
             {/* Filter Bar */}
             <FilterBar
-              category={category}
-              setCategory={setCategory}
-              year={year}
-              setYear={setYear}
+              category={pendingCategory}
+              setCategory={setPendingCategory}
+              year={pendingYear}
+              setYear={setPendingYear}
               years={availableYears}
               onSubmit={() => {
-                fetchForecast();
-                fetchRawData();
+                setModel(pendingModel);
+                setCategory(pendingCategory);
+                setYear(pendingYear);
               }}
             />
           </div>
@@ -356,9 +370,21 @@ const ForecastPage: React.FC = () => {
                         <TableCell className="font-medium">
                           {row.date}
                         </TableCell>
-                        <TableCell>{row.forecastValue.toFixed(2)}</TableCell>
-                        <TableCell>{row.upperValue.toFixed(2)}</TableCell>
-                        <TableCell>{row.lowerValue.toFixed(2)}</TableCell>
+                        <TableCell>
+                          {row.forecastValue !== null
+                            ? row.forecastValue.toFixed(2)
+                            : "-"}
+                        </TableCell>
+                        <TableCell>
+                          {row.upperValue !== null
+                            ? row.upperValue.toFixed(2)
+                            : "-"}
+                        </TableCell>
+                        <TableCell>
+                          {row.lowerValue !== null
+                            ? row.lowerValue.toFixed(2)
+                            : "-"}
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : (
@@ -404,9 +430,7 @@ const ForecastPage: React.FC = () => {
                         const actual = actualData.find((a) => a.date === date);
                         return (
                           <TableRow key={i}>
-                            <TableCell className="font-medium">
-                              {date}
-                            </TableCell>
+                            <TableCell className="font-medium">{date}</TableCell>
                             <TableCell>
                               {forecast &&
                               typeof forecast.forecastValue === "number"
