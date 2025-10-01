@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
 import * as ecStat from "echarts-stat";
+import { RegressionInfo } from "@/components/correlation-section/regression-info";
 
 interface Props {
   pair: string[];
@@ -15,6 +16,7 @@ interface RawDataItem {
 
 export function CorrelationScatter({ pair, title }: Props) {
   const [series, setSeries] = useState<[number, number][]>([]);
+  const [regression, setRegression] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,6 +39,12 @@ export function CorrelationScatter({ pair, title }: Props) {
             .filter((d): d is [number, number] => d !== null);
 
           setSeries(filtered);
+
+          if (filtered.length > 2) {
+            const reg = ecStat.regression("linear", filtered,1);
+            reg.points.sort((a, b) => a[0] - b[0]);
+            setRegression(reg);
+          }
         }
       } catch (err) {
         console.error("Error fetching raw_data:", err);
@@ -52,36 +60,45 @@ export function CorrelationScatter({ pair, title }: Props) {
     return <div>Loading...</div>;
   }
 
-  // hitung regresi linear
-  const regression = ecStat.regression("linear", series, 1);
-  regression.points.sort((a, b) => a[0] - b[0]);
-
   const option = {
     title: { text: title, left: "center" },
-    tooltip: { trigger: "axis" },
+    tooltip: {
+      trigger: "item",
+      formatter: (params: any) =>
+        `${pair[0]}: ${params.value[0]}<br/>${pair[1]}: ${params.value[1]}`,
+    },
+    grid: { top: 60, bottom: 60, left: 80, right: 40 },
     xAxis: { name: pair[0] },
     yAxis: { name: pair[1] },
     series: [
       {
+        name: "Data",
         type: "scatter",
         data: series,
         symbolSize: 8,
+        itemStyle: { color: "#5470C6" },
       },
-      {
+      regression && {
+        name: "Regression Line",
         type: "line",
         data: regression.points,
         smooth: true,
-        lineStyle: { color: "#d14a61", width: 2 },
         showSymbol: false,
-        markPoint: {
-          data: [
-            { coord: regression.points[0], value: "Start" },
-            { coord: regression.points[regression.points.length - 1], value: "End" },
-          ],
-        },
+        lineStyle: { color: "#d14a61", width: 2 },
       },
-    ],
+    ].filter(Boolean),
   };
 
-  return <ReactECharts option={option} style={{ height: 400 }} />;
+  return (
+    <div className="flex flex-col items-center">
+      <ReactECharts option={option} style={{ height: 420, width: "100%" }} />
+      {regression && (
+        <RegressionInfo
+          gradient={regression.parameter.gradient}
+          intercept={regression.parameter.intercept}
+          r={regression.parameter.r}
+        />
+      )}
+    </div>
+  );
 }
