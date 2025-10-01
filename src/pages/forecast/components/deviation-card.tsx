@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 interface DeviationsCardProps {
@@ -7,11 +6,7 @@ interface DeviationsCardProps {
   topN?: number;
 }
 
-const DeviationsCard: React.FC<DeviationsCardProps> = ({
-  forecastData,
-  actualData,
-  topN = 3,
-}) => {
+export function DeviationsCard({ forecastData, actualData, topN = 3 }: DeviationsCardProps) {
   // hitung deviasi
   const deviations = forecastData
     .map((f) => {
@@ -48,27 +43,14 @@ const DeviationsCard: React.FC<DeviationsCardProps> = ({
                 <span className="font-medium block">{d.date}</span>
                 <span className="text-left block">
                   Forecast {d.forecast.toFixed(2)} vs Actual{" "}
-                  {d.actual.toFixed(2)}{" "}
-                  <span
-                    className={`ml-1 px-2 py-0.5 rounded text-xs font-semibold ${
-                      d.diff > 0
-                        ? "bg-red-100 text-red-600"
-                        : "bg-green-100 text-green-600"
-                    }`}
-                  >
-                    {d.diff > 0 ? "+" : ""}
-                    {d.diffPercent.toFixed(2)}%
-                  </span>
                 </span>
               </li>
             ))}
           </ul>
         ) : (
-          <div className="text-gray-500 text-sm">No deviations found.</div>
+          <div>No deviations available</div>
         )}
       </CardContent>
     </Card>
   );
-};
-
-export default DeviationsCard;
+}

@@ -1,4 +1,3 @@
-import React from "react";
 import Chart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
@@ -12,10 +11,10 @@ interface ForecastChartProps {
   actualData: { date: string; value: number }[];
 }
 
-const ForecastChart: React.FC<ForecastChartProps> = ({
+export function ForecastChart({
   forecastData,
   actualData,
-}) => {
+}: ForecastChartProps) {
   const series = [
     {
       name: "Forecast",
@@ -48,28 +47,19 @@ const ForecastChart: React.FC<ForecastChartProps> = ({
     colors: ["#5585fe", "#f59d00", "#f59d00", "#ca4e4d"],
     stroke: { curve: "smooth", width: [3, 3, 3, 3] },
     xaxis: {
-      type: "category",
-      title: { text: "Month" },
+      type: "datetime",
     },
     yaxis: {
-      title: { text: "Value" },
       labels: {
-        formatter: (val) => val.toFixed(2),
+        formatter: (val) => (val !== null ? val.toFixed(2) : ""),
       },
     },
     tooltip: {
       y: {
-        formatter: (val) => (val !== null ? val.toFixed(2) : "N/A"),
+        formatter: (val) => (val !== null ? val.toFixed(2) : ""),
       },
     },
-    dataLabels: {
-      enabled: false,
-      formatter: (val: number) => val.toFixed(2),
-    },
-    legend: { position: "bottom" },
   };
 
   return <Chart options={options} series={series} type="line" height={400} />;
-};
-
-export default ForecastChart;
+}

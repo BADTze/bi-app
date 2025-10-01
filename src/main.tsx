@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ForecastPage from "@/pages/forecast";
-import HomePage from "@/pages/home-page";
+import {ForecastPage} from "@/pages/forecast";
+import {HomePage} from "@/pages/home-page";
 import Layout from "@/layout";
 import "./index.css";
 

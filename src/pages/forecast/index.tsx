@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FilterBar from "@/components/filter-bar";
-import ForecastChart from "@/pages/forecast/components/forecast-chart";
-import WarningBanner from "@/pages/forecast/components/warning-banner";
-import ModelSummary from "@/pages/forecast/components/model-summary";
-import StatsSummary from "@/pages/forecast/components/stats-summary";
-import ForecastTable from "@/pages/forecast/components/forecast-table";
-import CompareTable from "@/pages/forecast/components/compare-table";
-import DeviationsCard from "@/pages/forecast/components/deviation-card";
+import {ForecastChart} from "@/pages/forecast/components/forecast-chart";
+import {WarningBanner} from "@/pages/forecast/components/warning-banner";
+import {ModelSummary} from "@/pages/forecast/components/model-summary";
+import {StatsSummary} from "@/pages/forecast/components/stats-summary";
+import {ForecastTable} from "@/pages/forecast/components/forecast-table";
+import {CompareTable} from "@/pages/forecast/components/compare-table";
+import {DeviationsCard} from "@/pages/forecast/components/deviation-card";
 
 interface ForecastRow {
   date: string;
@@ -21,7 +21,7 @@ interface ActualRow {
   value: number;
 }
 
-const ForecastPage: React.FC = () => {
+export function ForecastPage() {
   const [model, setModel] = useState("prophet");
   const [category, setCategory] = useState("indexEnergy");
   const [year, setYear] = useState("2025");
@@ -219,6 +219,4 @@ const ForecastPage: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default ForecastPage;
+}

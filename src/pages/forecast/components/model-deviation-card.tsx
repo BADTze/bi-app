@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 interface ModelDeviationCardProps {
@@ -8,12 +7,12 @@ interface ModelDeviationCardProps {
   topN?: number;
 }
 
-const ModelDeviationCard: React.FC<ModelDeviationCardProps> = ({
+export function ModelDeviationCard({
   evaluation,
   forecastData,
   actualData,
   topN = 3,
-}) => {
+}: ModelDeviationCardProps) {
   const deviations = forecastData
     .map((f) => {
       const actual = actualData.find((a) => a.date === f.date);
@@ -48,56 +47,42 @@ const ModelDeviationCard: React.FC<ModelDeviationCardProps> = ({
               <>
                 <p>
                   MAE:{" "}
-                  <span className="font-bold">{evaluation.mae.toFixed(2)}</span>
+                  {evaluation.mae}
                 </p>
                 <p>
                   RMSE:{" "}
-                  <span className="font-bold">{evaluation.rmse.toFixed(2)}</span>
+                  {evaluation.rmse}
                 </p>
                 <p>
                   MAPE:{" "}
-                  <span className="font-bold">
-                    {evaluation.mape}%
-                  </span>
+                  {evaluation.mape}
                 </p>
               </>
             ) : (
-              <p className="text-gray-500">No evaluation available</p>
+              <p>No evaluation data available</p>
             )}
           </div>
 
           {/* Deviations */}
-          <div className="text-sm">
-            <h4 className="font-semibold mb-2">Top {topN} Deviations</h4>
+          <div className="space-y-2 text-sm">
             {deviations.length > 0 ? (
-              <ul className="space-y-1">
-                {deviations.map((d, i) => (
-                  <li key={i} className="flex justify-between">
-                    <span>{d.date}:</span>
-                    <span>
-                      {d.forecast.toFixed(2)} vs {d.actual.toFixed(2)}{" "}
-                      <span
-                        className={`ml-1 px-2 py-0.5 rounded text-xs font-semibold ${
-                          d.diff > 0
-                            ? "bg-red-100 text-red-600"
-                            : "bg-green-100 text-green-600"
-                        }`}
-                      >
-                        {d.diff > 0 ? "+" : ""}
-                        {d.diffPercent.toFixed(2)}%
-                      </span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              deviations.map((d, i) => (
+                <div key={i}>
+                  <p>
+                    <strong>{d.date}</strong>
+                  </p>
+                  <p>
+                    Forecast: {d.forecast.toFixed(2)} vs Actual: {d.actual.toFixed(2)}
+                  </p>
+                  <p>Deviation: {d.diffPercent.toFixed(2)}%</p>
+                </div>
+              ))
             ) : (
-              <p className="text-gray-500">No deviations found</p>
+              <p>No deviations available</p>
             )}
           </div>
         </div>
       </CardContent>
     </Card>
   );
-};
-
-export default ModelDeviationCard;
+}

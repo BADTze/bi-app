@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
@@ -11,10 +10,7 @@ interface ActualRow {
   value: number;
 }
 
-const CompareTable: React.FC<{ forecastData: ForecastRow[]; actualData: ActualRow[] }> = ({
-  forecastData,
-  actualData,
-}) => {
+export function CompareTable({ forecastData, actualData }: { forecastData: ForecastRow[]; actualData: ActualRow[] }) {
   const allDates = Array.from(new Set([...forecastData.map(f => f.date), ...actualData.map(a => a.date)])).sort();
 
   return (
@@ -56,6 +52,4 @@ const CompareTable: React.FC<{ forecastData: ForecastRow[]; actualData: ActualRo
       </CardContent>
     </Card>
   );
-};
-
-export default CompareTable;
+}

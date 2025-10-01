@@ -1,35 +1,49 @@
-import React from "react";
-import Chart from "react-apexcharts";
+import ReactECharts from "echarts-for-react";
 
-interface CorrelationHeatmapProps {
+export function CorrelationHeatmap({
+  matrix,
+  title,
+}: {
   matrix: Record<string, Record<string, number>>;
-}
+  title: string;
+}) {
+  const variables = Object.keys(matrix);
+  const values: [number, number, number][] = [];
 
-const CorrelationHeatmap: React.FC<CorrelationHeatmapProps> = ({ matrix }) => {
-  const categories = Object.keys(matrix);
-  const series = categories.map((row) => ({
-    name: row,
-    data: categories.map((col) => matrix[row][col]),
-  }));
+  variables.forEach((row, i) => {
+    variables.forEach((col, j) => {
+      values.push([i, j, matrix[row][col]]);
+    });
+  });
 
-  return (
-    <div className="border rounded-lg shadow-md">
-      <Chart
-        type="heatmap"
-        height={350}
-        series={series}
-        options={{
-          chart: { toolbar: { show: false } },
-          dataLabels: {
-            enabled: true,
-            formatter: (val: number) => val.toFixed(2),
+  const option = {
+    title: { text: `${title} Correlation Heatmap`, left: "center" },
+    tooltip: { position: "top" },
+    xAxis: { type: "category", data: variables },
+    yAxis: { type: "category", data: variables },
+    visualMap: {
+      min: -1,
+      max: 1,
+      calculable: true,
+      orient: "horizontal",
+      left: "center",
+      bottom: "10%",
+    },
+    series: [
+      {
+        name: "Correlation",
+        type: "heatmap",
+        data: values,
+        label: { show: true },
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowColor: "rgba(0,0,0,0.5)",
           },
-          xaxis: { categories },
-          colors: ["#008FFB"],
-        }}
-      />
-    </div>
-  );
-};
+        },
+      },
+    ],
+  };
 
-export default CorrelationHeatmap;
+  return <ReactECharts style={{ height: 400 }} option={option} />;
+}

@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Stats {
@@ -13,48 +12,48 @@ interface StatsSummaryProps {
   diffPercent: number | null;
 }
 
-const StatsSummary: React.FC<StatsSummaryProps> = ({ actualStats, forecastStats, diffPercent }) => (
-  <Card className="flex-1 w-60">
-    <CardHeader>
-      <CardTitle>Summary</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <table className="w-full text-sm border-collapse">
-        <thead>
-          <tr className="text-left border-b">
-            <th className="py-1">Metric</th>
-            <th className="py-1">Actual</th>
-            <th className="py-1">Forecast</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="py-1">Min</td>
-            <td>{actualStats.min}</td>
-            <td>{forecastStats.min}</td>
-          </tr>
-          <tr>
-            <td className="py-1">Max</td>
-            <td>{actualStats.max}</td>
-            <td>{forecastStats.max}</td>
-          </tr>
-          <tr>
-            <td className="py-1">Avg</td>
-            <td>{actualStats.avg}</td>
-            <td>{forecastStats.avg}</td>
-          </tr>
-        </tbody>
-      </table>
+export function StatsSummary({ actualStats, forecastStats, diffPercent }: StatsSummaryProps) {
+  return (
+    <Card className="flex-1 w-60">
+      <CardHeader>
+        <CardTitle>Summary</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="text-left border-b">
+              <th className="py-1">Metric</th>
+              <th className="py-1">Actual</th>
+              <th className="py-1">Forecast</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="py-1">Min</td>
+              <td>{actualStats.min}</td>
+              <td>{forecastStats.min}</td>
+            </tr>
+            <tr>
+              <td className="py-1">Max</td>
+              <td>{actualStats.max}</td>
+              <td>{forecastStats.max}</td>
+            </tr>
+            <tr>
+              <td className="py-1">Avg</td>
+              <td>{actualStats.avg}</td>
+              <td>{forecastStats.avg}</td>
+            </tr>
+          </tbody>
+        </table>
 
-      {diffPercent !== null && (
-        <div className="mt-3 text-xs text-gray-600">
-          Forecast rata-rata{" "}
-          {diffPercent > 0 ? "lebih tinggi" : "lebih rendah"} {Math.abs(diffPercent).toFixed(2)}%
-          dibanding Actual.
-        </div>
-      )}
-    </CardContent>
-  </Card>
-);
-
-export default StatsSummary;
+        {diffPercent !== null && (
+          <div className="mt-3 text-xs text-gray-600">
+            Forecast rata-rata{" "}
+            {diffPercent > 0 ? "lebih tinggi" : "lebih rendah"} {Math.abs(diffPercent).toFixed(2)}%
+            dibanding Actual.
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
