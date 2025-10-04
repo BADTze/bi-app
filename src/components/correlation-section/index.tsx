@@ -1,73 +1,51 @@
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { CorrelationHeatmap } from "@/components/correlation-section/correlation-heatmap";
-import { CorrelationScatter } from "@/components/correlation-section/correlation-scatter";
+import { CorrelationInfo } from "@/components/correlation-section/corr-info";
+import { VifInfo } from "./vif-info";
+import { RegressionInfo } from "./regression-info";
 
-interface CorrelationResponse {
-  spearman: {
-    matrix: Record<string, Record<string, number>>;
-    insight: {
-      highest_positive: { pair: string[]; value: number };
-      highest_negative: { pair: string[]; value: number };
-    };
+interface ApiResponse {
+  correlation: {
+    pearson: any;
+    spearman: any;
   };
-  pearson: {
-    matrix: Record<string, Record<string, number>>;
-    insight: {
-      highest_positive: { pair: string[]; value: number };
-      highest_negative: { pair: string[]; value: number };
-    };
-  };
+  regression: any;
+  vif: any;
 }
 
 export function CorrelationSection() {
-  const [correlation, setCorrelation] = useState<CorrelationResponse | null>(
-    null
-  );
-
-  const fetchCorrelation = async () => {
-    try {
-      const res = await fetch(
-        "http://127.0.0.1:5000/bi-apps/api/var_correlation"
-      );
-      const data = await res.json();
-      setCorrelation(data);
-    } catch (err) {
-      console.error("Error fetching correlation:", err);
-    }
-  };
+  const [data, setData] = useState<ApiResponse | null>(null);
 
   useEffect(() => {
-    fetchCorrelation();
+    const fetchData = async () => {
+      try {
+        const res = await fetch(
+          "http://127.0.0.1:5000/bi-apps/api/var_correlation"
+        );
+        const json = await res.json();
+        setData(json);
+      } catch (err) {
+        console.error("Error fetching correlation:", err);
+      }
+    };
+    fetchData();
   }, []);
 
-  if (!correlation) {
-    return <div className="text-gray-500">Loading correlation data...</div>;
+  if (!data) {
+    return <div className="p-4 text-center">Loading correlation data...</div>;
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full">
-      {(["spearman", "pearson"] as const).map((method) => (
-        <Card key={method} className="flex-1">
-          <CardHeader>
-            <CardTitle>{method.toUpperCase()} Correlation</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CorrelationHeatmap
-              matrix={correlation[method].matrix}
-              title={method.toUpperCase()}
-            />
-            <CorrelationScatter
-              pair={correlation[method].insight.highest_positive.pair}
-              title={`Highest Positive Correlation (${correlation[method].insight.highest_positive.value.toFixed(2)})`}
-            />
-            <CorrelationScatter
-              pair={correlation[method].insight.highest_negative.pair}
-              title={`Highest Negative Correlation (${correlation[method].insight.highest_negative.value.toFixed(2)})`}
-            />
-          </CardContent>
-        </Card>
-      ))}
+    <div className="flex flex-col gap-3 w-full rounded-2xl bg-gray-200 border-2 p-4">
+      <h2 className="text-xl font-semibold">Correlation Info</h2>
+      <CorrelationInfo title="Pearson Method" data={data.correlation.pearson} />
+      <CorrelationInfo
+        title="Spearman Method"
+        data={data.correlation.spearman}
+      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <VifInfo />
+        <RegressionInfo data={data.regression} />
+      </div>
     </div>
   );
 }
