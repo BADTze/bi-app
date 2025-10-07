@@ -35,17 +35,17 @@ export function HeatmapChart({
           params.value[2]
         }`,
     },
-    grid: { top:10, left: 5, right: 10, containLabel: true },
+    grid: { top: 20, left: 10, bottom: 10, right: 20, containLabel: true },
     xAxis: { type: "category", data: vars, splitArea: { show: true } },
     yAxis: { type: "category", data: vars, splitArea: { show: true } },
     visualMap: {
-        min,
-        max,
-        calculable: true,
-        orient: "horizontal",
-        left: "center",
-        bottom: "0%",
-        inRange: colorRange ? { color: colorRange } : undefined,
+      min,
+      max,
+      calculable: true,
+      orient: "horizontal",
+      left: "center",
+      bottom: "0%",
+      inRange: colorRange ? { color: colorRange } : undefined,
       show: false,
     },
     series: [
@@ -67,7 +67,7 @@ export function HeatmapChart({
   return (
     <ReactECharts
       option={option}
-      style={{ width: "100%", height: "100%", aspectRatio: "1 / 1" }}
+      style={{ width: "100%", height: "100%"}}
     />
   );
 }
