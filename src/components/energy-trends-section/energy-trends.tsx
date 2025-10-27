@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { EnergyTrendChart } from "@/components/energy-trends-section/energy-charts";
+import { LineTrendChart } from "@/components/line-charts";
 
 interface EnergyData {
   month: string;
@@ -25,12 +25,12 @@ export function EnergyTrends() {
     }));
 
   return (
-    <div className="flex flex-col gap-4 w-full rounded-2xl bg-gray-200 border-2 p-4">
+    <div className="flex flex-col gap-2 w-full rounded-2xl bg-gray-200 border-2 p-3">
       <h2 className="text-xl font-semibold mb-2">Energy Trends</h2>
 
-      <div className="grid  gap-4">
+      <div className="grid gap-2">
         <div className="border rounded-lg bg-white">
-          <EnergyTrendChart
+          <LineTrendChart
             title="Diesel Consumption"
             data={extractCategory("dieselValue")}
             color="#1e3a8a"
@@ -38,7 +38,7 @@ export function EnergyTrends() {
           />
         </div>
         <div className="border rounded-lg bg-white">
-          <EnergyTrendChart
+          <LineTrendChart
             title="Electricity Usage"
             data={extractCategory("electricity")}
             color="#f59e0b"
@@ -46,7 +46,7 @@ export function EnergyTrends() {
           />
         </div>
         <div className="border rounded-lg bg-white">
-          <EnergyTrendChart
+          <LineTrendChart
             title="Natural Gas Usage"
             data={extractCategory("naturalGas")}
             color="#059669"
@@ -54,7 +54,7 @@ export function EnergyTrends() {
           />
         </div>
         <div className="border rounded-lg bg-white">
-          <EnergyTrendChart
+          <LineTrendChart
             title="Index Energy"
             data={extractCategory("indexEnergy")}
             color="#ef4444"

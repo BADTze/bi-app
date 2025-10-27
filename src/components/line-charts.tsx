@@ -1,13 +1,13 @@
 import ReactECharts from "echarts-for-react";
 
-interface EnergyTrendChartProps {
+interface LineChartProps {
   title: string;
   data: { month: string; year: string; value: number }[];
   color?: string;
   unit?: string;
 }
 
-export function EnergyTrendChart({ title, data, color, unit }: EnergyTrendChartProps) {
+export function LineTrendChart({ title, data, color, unit }: LineChartProps) {
   const categories = data.map((d) => `${d.year}-${d.month}`);
   const values = data.map((d) => Number(d.value.toFixed(2)));
 

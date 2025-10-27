@@ -3,7 +3,7 @@ import { EnergyTrends } from "@/components/energy-trends-section/energy-trends";
 
 export function HomePage() {
   return (
-    <div className="flex flex-col lg:flex-row w-full gap-4 p-4">
+    <div className="flex flex-col lg:flex-row w-full gap-4">
       {/* Correlation Section - lebih lebar */}
       <div className="flex-[1.5] min-w-[55%]">
         <CorrelationSection />

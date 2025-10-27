@@ -35,7 +35,7 @@ export function CorrelationSection() {
   }
 
   return (
-    <div className="flex flex-col gap-3 w-full rounded-2xl bg-gray-200 border-2 p-4">
+    <div className="flex flex-col gap-3 w-full rounded-2xl bg-gray-200 border-2 p-3">
       <h2 className="text-xl font-semibold">Correlation Info</h2>
       <CorrelationInfo title="Pearson Method" data={data.correlation.pearson} />
       <CorrelationInfo

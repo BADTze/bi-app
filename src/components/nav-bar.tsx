@@ -6,12 +6,21 @@ const Navbar = () => {
   const navItems = [
     { label: "Home", path: "/" },
     { label: "Forecast", path: "/forecast" },
+    { label: "Data", path: "/data-dash" },
   ];
 
   return (
     <nav className="w-full bg-gray-200 text-black shadow-md px-6 py-3 flex items-center justify-between">
       {/* Logo */}
-      <div className="font-bold text-lg">BI Apps</div>
+      <div className="font-bold text-lg">
+        {(() => {
+          const current = navItems.find((i) => i.path === location.pathname);
+          if (current) return `${current.label} Page`;
+          const parts = location.pathname.split("/").filter(Boolean);
+          if (parts.length === 0) return "Home Page";
+          return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ") + " Page";
+        })()}
+      </div>
 
       {/* Menu */}
       <div className="flex gap-4">

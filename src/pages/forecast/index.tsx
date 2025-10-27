@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FilterBar from "@/components/filter-bar";
-import {ForecastChart} from "@/pages/forecast/components/forecast-chart";
-import {WarningBanner} from "@/pages/forecast/components/warning-banner";
-import {ModelSummary} from "@/pages/forecast/components/model-summary";
-import {StatsSummary} from "@/pages/forecast/components/stats-summary";
-import {ForecastTable} from "@/pages/forecast/components/forecast-table";
-import {CompareTable} from "@/pages/forecast/components/compare-table";
-import {DeviationsCard} from "@/pages/forecast/components/deviation-card";
+import { ForecastChart } from "@/pages/forecast/components/forecast-chart";
+import { WarningBanner } from "@/pages/forecast/components/warning-banner";
+import { ModelSummary } from "@/pages/forecast/components/model-summary";
+import { StatsSummary } from "@/pages/forecast/components/stats-summary";
+import { ForecastTable } from "@/pages/forecast/components/forecast-table";
+import { CompareTable } from "@/pages/forecast/components/compare-table";
+import { DeviationsCard } from "@/pages/forecast/components/deviation-card";
 
 interface ForecastRow {
   date: string;
@@ -154,7 +154,9 @@ export function ForecastPage() {
   let diffPercent = null;
   if (Number(actualStats.avg) > 0) {
     diffPercent =
-      ((Number(forecastStats.avg) - Number(actualStats.avg)) / Number(actualStats.avg)) * 100;
+      ((Number(forecastStats.avg) - Number(actualStats.avg)) /
+        Number(actualStats.avg)) *
+      100;
   }
 
   return (
@@ -168,9 +170,9 @@ export function ForecastPage() {
             {/* Tabs Model */}
             <Tabs value={pendingModel} onValueChange={setPendingModel}>
               <TabsList className="rounded-md border-2 p-0.5 shadow-sm gap-1">
-                <TabsTrigger value="prophet">Model 1</TabsTrigger>
-                <TabsTrigger value="sarimax">Model 2</TabsTrigger>
-                <TabsTrigger value="linear">Model 3</TabsTrigger>
+                <TabsTrigger value="prophet">Prophet</TabsTrigger>
+                <TabsTrigger value="sarimax">Sarimax</TabsTrigger>
+                <TabsTrigger value="linear">Linear</TabsTrigger>
               </TabsList>
             </Tabs>
 

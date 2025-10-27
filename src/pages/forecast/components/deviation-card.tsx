@@ -6,7 +6,11 @@ interface DeviationsCardProps {
   topN?: number;
 }
 
-export function DeviationsCard({ forecastData, actualData, topN = 3 }: DeviationsCardProps) {
+export function DeviationsCard({
+  forecastData,
+  actualData,
+  topN = 3,
+}: DeviationsCardProps) {
   // hitung deviasi
   const deviations = forecastData
     .map((f) => {
@@ -42,7 +46,8 @@ export function DeviationsCard({ forecastData, actualData, topN = 3 }: Deviation
               <li key={i} className="space-y-1 mb-2">
                 <span className="font-medium block">{d.date}</span>
                 <span className="text-left block">
-                  Forecast {d.forecast.toFixed(2)} vs Actual{" "}
+                  Forecast {d.forecast.toFixed(2)} vs Actual
+                  {d.actual.toFixed(2)}
                 </span>
               </li>
             ))}

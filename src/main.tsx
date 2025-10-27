@@ -5,7 +5,6 @@ import {ForecastPage} from "@/pages/forecast";
 import {HomePage} from "@/pages/home-page";
 import Layout from "@/layout";
 import "./index.css";
-import { LoginPage } from "./pages/login";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -17,9 +16,9 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/forecast" element={<Layout title="Forecast Page" />}>
           <Route index element={<ForecastPage />} />
         </Route>
-        <Route path="/login" element={<Layout title="login Page" />}>
+        {/* <Route path="/data-dash" element={<Layout title="Summary Page" />}>
           <Route index element={<LoginPage />} />
-        </Route>
+        </Route> */}
       </Routes>
     </BrowserRouter>
   </StrictMode>
