@@ -19,7 +19,7 @@ export function RegressionPlot({ pair, label }: Props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:5000/bi-apps/api/clean_data");
+        const res = await fetch("http://localhost:5000/bi-apps/api/clean_data?extend=false");
         const data: CleanDataItem[] = await res.json();
 
         if (Array.isArray(data) && pair.length === 2) {
@@ -40,22 +40,38 @@ export function RegressionPlot({ pair, label }: Props) {
           // hitung regresi linear sederhana
           const n = filtered.length;
           if (n > 1) {
-            const sumX = filtered.reduce((acc, [x]) => acc + x, 0);
-            const sumY = filtered.reduce((acc, [, y]) => acc + y, 0);
-            const sumXY = filtered.reduce((acc, [x, y]) => acc + x * y, 0);
-            const sumXX = filtered.reduce((acc, [x]) => acc + x * x, 0);
-
-            const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-            const intercept = sumY / n - slope * (sumX / n);
-
             const xs = filtered.map(([x]) => x);
+            const ys = filtered.map(([, y]) => y);
+            
+            // Normalisasi data untuk menghindari masalah numerik
+            const meanX = xs.reduce((a, b) => a + b, 0) / n;
+            const meanY = ys.reduce((a, b) => a + b, 0) / n;
+            const stdX = Math.sqrt(xs.reduce((a, x) => a + (x - meanX) ** 2, 0) / n);
+            const stdY = Math.sqrt(ys.reduce((a, y) => a + (y - meanY) ** 2, 0) / n);
+            
+            // Hitung korelasi
+            const covariance = filtered.reduce((acc, [x, y]) => 
+              acc + (x - meanX) * (y - meanY), 0) / n;
+            const correlation = covariance / (stdX * stdY);
+            
+            // Hitung slope dan intercept
+            const slope = correlation * (stdY / stdX);
+            const intercept = meanY - slope * meanX;
+            
+            // Tentukan arah garis berdasarkan korelasi
             const minX = Math.min(...xs);
             const maxX = Math.max(...xs);
-            const line: [number, number][] = [
-              [minX, slope * minX + intercept],
-              [maxX, slope * maxX + intercept],
-            ];
-            setLineData(line);
+            
+            // Buat titik-titik garis regresi
+            const linePoints: [number, number][] = [];
+            const steps = 100;
+            for (let i = 0; i <= steps; i++) {
+              const x = minX + (maxX - minX) * (i / steps);
+              const y = slope * x + intercept;
+              linePoints.push([x, y]);
+            }
+            
+            setLineData(linePoints);
           }
         }
       } catch (err) {
@@ -132,8 +148,13 @@ export function RegressionPlot({ pair, label }: Props) {
       {
         type: "line",
         data: lineData,
-        lineStyle: { color: "red", width: 2 },
-        showSymbol: false,
+        lineStyle: { 
+          color: "#ff4d4f",
+          width: 2,
+          type: "solid"
+        },
+        symbol: "none",
+        smooth: true,
       },
     ],
   };
