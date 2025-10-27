@@ -15,8 +15,6 @@ export function EnergyTrends() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // pakai extend=true untuk menampilkan sampai tahun berjalan,
-    // kalau tidak mau placeholder 0 ganti jadi extend=false
     const url = "http://localhost:5000/bi-apps/api/clean_data?extend=true";
 
     fetch(url)
@@ -25,7 +23,6 @@ export function EnergyTrends() {
         return res.json();
       })
       .then((json) => {
-        // json bisa berupa array (default) atau object { category, data }
         let rows: any[] = [];
 
         if (Array.isArray(json)) {
@@ -68,14 +65,11 @@ export function EnergyTrends() {
       });
   }, []);
 
-  // Ambil data per kategori, filter berdasarkan tahun terpilih
-  // dan buang nilai yang 0 atau falsy supaya chart tidak dipotong
   const extractCategory = (key: string) =>
     data
       .filter((d) => d.year === selectedYear)
       .map((d) => {
         const raw = d.values?.[key];
-        // treat 0 or null/undefined as missing -> exclude (frontend requested)
         const value =
           typeof raw === "number" && !Number.isNaN(raw) && raw !== 0
             ? Number(raw)

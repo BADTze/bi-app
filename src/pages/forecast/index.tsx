@@ -77,24 +77,38 @@ export function ForecastPage() {
   // fetch actual data
   const fetchRawData = async () => {
     try {
-      const res = await fetch(`http://127.0.0.1:5000/bi-apps/api/raw_data`);
+      const res = await fetch(
+        `http://127.0.0.1:5000/bi-apps/api/clean_data?extend=true`
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
       if (Array.isArray(data)) {
-        const years = [...new Set(data.map((item: any) => item.year))];
+        const years = [
+          ...new Set(data.map((item: any) => String(item.year))),
+        ].sort();
         setAvailableYears(years);
 
-        const filtered = data.filter((item: any) => item.year === year);
+        const filtered = data.filter((item: any) => String(item.year) === year);
 
-        const mapped: ActualRow[] = filtered.map((item: any) => ({
-          date: `${item.year}-${item.month.padStart(2, "0")}`,
-          value: item.values[category],
-        }));
+        const mapped: ActualRow[] = filtered
+          .map((item: any) => ({
+            date: `${item.year}-${item.month.padStart(2, "0")}`,
+            value:
+              item.values && typeof item.values[category] === "number"
+                ? Number(item.values[category].toFixed(2))
+                : 0,
+          }))
+          .filter((row) => row.value > 0);
 
         setActualData(mapped);
+      } else {
+        console.warn("Unexpected clean_data payload:", data);
+        setActualData([]);
       }
     } catch (err) {
       console.error("Error fetching actual data:", err);
+      setActualData([]);
     }
   };
 
