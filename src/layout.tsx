@@ -9,11 +9,8 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navbar */}
       <Navbar />
-
-      {/* Content */}
-      <main className="flex-1 p-4">
+      <main className="flex-1 p-2">
         <Outlet />
       </main>
     </div>

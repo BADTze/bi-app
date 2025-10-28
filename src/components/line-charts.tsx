@@ -35,5 +35,5 @@ export function LineTrendChart({ title, data, color, unit }: LineChartProps) {
     ],
   };
 
-  return <ReactECharts option={option} style={{ height: 240 }} />;
+  return <ReactECharts option={option} style={{ height: 250 }} />;
 }

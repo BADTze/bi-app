@@ -30,22 +30,46 @@ export function CorrelationSection() {
     fetchData();
   }, []);
 
-  if (!data) {
-    return <div className="p-4 text-center">Loading correlation data...</div>;
-  }
-
   return (
     <div className="flex flex-col gap-3 w-full rounded-2xl bg-gray-200 border-2 p-3">
       <h2 className="text-xl font-semibold">Correlation Info</h2>
-      <CorrelationInfo title="Pearson Method" data={data.correlation.pearson} />
-      <CorrelationInfo
-        title="Spearman Method"
-        data={data.correlation.spearman}
-      />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <VifInfo />
-        <RegressionInfo data={data.regression} />
-      </div>
+      {!data ? (
+        <>
+          <div className="h-20 bg-gray-300 animate-pulse rounded-lg"></div>
+          <div className="h-20 bg-gray-300 animate-pulse rounded-lg"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="h-40 bg-gray-300 animate-pulse rounded-lg"></div>
+            <div className="h-40 bg-gray-300 animate-pulse rounded-lg"></div>
+          </div>
+        </>
+      ) : (
+        <>
+          <CorrelationInfo title="Pearson Method" data={data.correlation.pearson} />
+          <CorrelationInfo
+            title="Spearman Method"
+            data={data.correlation.spearman}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <VifInfo />
+            <RegressionInfo data={data.regression} />
+          </div>
+        </>
+      )}
     </div>
   );
+
+  // return (
+  //   <div className="flex flex-col gap-3 w-full rounded-2xl bg-gray-200 border-2 p-3">
+  //     <h2 className="text-xl font-semibold">Correlation Info</h2>
+  //     <CorrelationInfo title="Pearson Method" data={data.correlation.pearson} />
+  //     <CorrelationInfo
+  //       title="Spearman Method"
+  //       data={data.correlation.spearman}
+  //     />
+  //     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  //       <VifInfo />
+  //       <RegressionInfo data={data.regression} />
+  //     </div>
+  //   </div>
+  // );
 }
