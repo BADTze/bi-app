@@ -33,7 +33,15 @@ export function LineTrendChart({ title, data, color, unit }: LineChartProps) {
         lineStyle: { width: 2, color: color ?? "#3b82f6" },
       },
     ],
+    grid: {
+      left: 50,
+      right: 15,
+      top: 40,
+      bottom: 25,
+    },
   };
 
-  return <ReactECharts option={option} style={{ height: 250 }} />;
+  return (
+    <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
+  );
 }
