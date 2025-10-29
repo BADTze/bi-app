@@ -10,7 +10,7 @@ interface ForecastRow {
 
 export function ForecastTable({ forecastData }: { forecastData: ForecastRow[] }) {
   return (
-    <Card className="flex-1 min-w-[300px]">
+    <Card className="flex-1 min-w-[300px] bg-gray-100">
       <CardHeader>
         <CardTitle>Data Forecast</CardTitle>
       </CardHeader>

@@ -177,13 +177,13 @@ export function ForecastPage() {
     <div className="flex w-full">
       <div className="flex w-full flex-wrap gap-2">
         {/* Chart Section */}
-        <div className="w-full bg-gray-200 border-2 rounded-lg p-2 shadow-md">
+        <div className="w-full border-1 bg-gray-100 rounded-lg p-2 shadow-sm">
           <div className="flex justify-between items-center mb-2">
             <h3 className="font-bold text-lg">Forecast vs Actual (GJ/Kl)</h3>
 
             {/* Tabs Model */}
             <Tabs value={pendingModel} onValueChange={setPendingModel}>
-              <TabsList className="rounded-md border-2 p-0.5 shadow-sm gap-1">
+              <TabsList className="rounded-md border-2 p-0.5 gap-1">
                 <TabsTrigger value="prophet">Prophet</TabsTrigger>
                 <TabsTrigger value="sarimax">Sarimax</TabsTrigger>
                 <TabsTrigger value="linear">Linear</TabsTrigger>
@@ -213,7 +213,7 @@ export function ForecastPage() {
         </div>
 
         {/* Model & Stats Summary */}
-        <div className="flex flex-wrap gap-2 w-full mt-2">
+        <div className="flex flex-wrap gap-3 w-full mt-2">
           <ModelSummary evaluation={evaluation} />
           <StatsSummary
             actualStats={actualStats}

@@ -31,7 +31,7 @@ export function CorrelationSection() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-3 w-full rounded-2xl bg-gray-200 border-2 p-3">
+    <div className="flex flex-col gap-3 w-full h-full rounded-2xl bg-gray-200 border-2 p-3">
       <h2 className="text-xl font-semibold">Correlation Info</h2>
       {!data ? (
         <>
@@ -44,7 +44,10 @@ export function CorrelationSection() {
         </>
       ) : (
         <>
-          <CorrelationInfo title="Pearson Method" data={data.correlation.pearson} />
+          <CorrelationInfo
+            title="Pearson Method"
+            data={data.correlation.pearson}
+          />
           <CorrelationInfo
             title="Spearman Method"
             data={data.correlation.spearman}
@@ -57,19 +60,4 @@ export function CorrelationSection() {
       )}
     </div>
   );
-
-  // return (
-  //   <div className="flex flex-col gap-3 w-full rounded-2xl bg-gray-200 border-2 p-3">
-  //     <h2 className="text-xl font-semibold">Correlation Info</h2>
-  //     <CorrelationInfo title="Pearson Method" data={data.correlation.pearson} />
-  //     <CorrelationInfo
-  //       title="Spearman Method"
-  //       data={data.correlation.spearman}
-  //     />
-  //     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  //       <VifInfo />
-  //       <RegressionInfo data={data.regression} />
-  //     </div>
-  //   </div>
-  // );
 }

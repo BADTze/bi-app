@@ -56,7 +56,7 @@ export function EnergyOverviewSection() {
   }
 
   return (
-    <div className="w-full space-y-4 border-2 rounded-2xl gap-6 p-3 bg-gray-200 ">
+    <div className="w-full h-full space-y-4 border-2 rounded-2xl gap-6 p-3 bg-gray-200">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Energy Overview</h2>
         <Select value={selectedYear} onValueChange={setSelectedYear}>

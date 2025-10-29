@@ -7,15 +7,27 @@ interface EnergyTrendsProps {
 }
 
 export function EnergyTrends({ selectedYear, data }: EnergyTrendsProps) {
-  const extractCategory = (key: string) =>
-    data
-      .filter((d) => d.year === selectedYear)
+  const extractCategory = (key: string) => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear().toString();
+    const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+
+    return data
+      .filter((d) => {
+        // Untuk tahun berjalan, filter berdasarkan bulan saat ini
+        if (d.year === currentYear) {
+          return d.year === selectedYear && d.month <= currentMonth;
+        }
+        // Untuk tahun-tahun sebelumnya, tampilkan semua bulan
+        return d.year === selectedYear;
+      })
       .map((d) => {
         const value =
           typeof d.values?.[key] === "number" ? d.values[key] : null;
         return value !== null ? { month: d.month, year: d.year, value } : null;
       })
       .filter(Boolean) as { month: string; year: string; value: number }[];
+  };
 
   return (
     <div className="flex flex-col gap-3 w-full rounded-2xl border-2 p-3 shadow-sm bg-white">
