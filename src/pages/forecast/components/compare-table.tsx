@@ -14,13 +14,13 @@ export function CompareTable({ forecastData, actualData }: { forecastData: Forec
   const allDates = Array.from(new Set([...forecastData.map(f => f.date), ...actualData.map(a => a.date)])).sort();
 
   return (
-    <Card className="flex-1 min-w-[300px] bg-gray-100">
-      <CardHeader>
+    <Card className="flex-1 min-w-[300px] bg-gray-200 gap-3 py-3">
+      <CardHeader className="px-3">
         <CardTitle>Actual vs Forecast</CardTitle>
       </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
+      <CardContent className="px-3">
+        <Table className="bg-white rounded-lg">
+          <TableHeader className="bg-gray-100">
             <TableRow>
               <TableHead>DATE</TableHead>
               <TableHead>Forecast Value</TableHead>

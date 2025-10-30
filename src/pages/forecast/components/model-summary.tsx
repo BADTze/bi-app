@@ -6,7 +6,7 @@ interface ModelSummaryProps {
 
 export function ModelSummary({ evaluation }: ModelSummaryProps) {
   return (
-    <Card className="flex-1 bg-gray-100">
+    <Card className="flex-1 bg-gray-200">
       <CardHeader>
         <CardTitle>Model Evaluation</CardTitle>
       </CardHeader>

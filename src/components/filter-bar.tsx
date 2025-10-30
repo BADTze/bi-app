@@ -29,7 +29,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
     <div className="flex flex-wrap items-center gap-2 p-2">
       {/* Category Select */}
       <Select value={category} onValueChange={setCategory}>
-        <SelectTrigger className="w-[180px] h-[36px] rounded px-3 text-sm border-2 border-gray-300">
+        <SelectTrigger className="w-[180px] h-[36px] rounded px-3 text-sm border-8 border-gray-300">
           <SelectValue placeholder="Pilih Kategori" />
         </SelectTrigger>
         <SelectContent>
@@ -41,7 +41,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
       {/* Year Select (dynamic) */}
       <Select value={year} onValueChange={setYear}>
-        <SelectTrigger className="w-[120px] h-[36px] rounded px-3 text-sm border-4 border-gray-300">
+        <SelectTrigger className="w-[120px] h-[36px] rounded px-3 text-sm border-4 border-gray-200">
           <SelectValue placeholder="Pilih Tahun" />
         </SelectTrigger>
         <SelectContent>

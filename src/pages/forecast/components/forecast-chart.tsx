@@ -43,24 +43,19 @@ export function ForecastChart({
   forecastData,
   actualData,
 }: ForecastChartProps) {
-  // 1. Gabungkan data
   const mergedData = mergeData(forecastData, actualData);
 
-  // 2. Tentukan seri chart menggunakan data yang sudah digabungkan
   const series = [
     {
       name: "Actual",
       type: "line",
-      // Gunakan actualValue dari data yang digabungkan
       data: mergedData.map((d) => ({ x: d.date, y: d.actualValue })),
     },
     {
       name: "Forecast",
       type: "line",
-      // Gunakan forecastValue dari data yang digabungkan
       data: mergedData.map((d) => ({ x: d.date, y: d.forecastValue })),
     },
-    // Upper dan Lower tetap bisa menggunakan forecastValue
     {
       name: "Forecast Upper",
       type: "line",
@@ -91,12 +86,10 @@ export function ForecastChart({
     },
     tooltip: {
       y: {
-        // Gunakan formatter default karena sekarang semua seri sudah terwakili
         formatter: (val) => (val !== null ? val.toFixed(2) : ""),
       },
-      // Penting: Pastikan mode tooltip diatur agar menampilkan semua seri
-      shared: true, // Untuk menampilkan semua nilai di titik yang sama
-      intersect: false, // Untuk mendapatkan data dari semua seri di hover
+      shared: true,
+      intersect: false,
     },
   };
 

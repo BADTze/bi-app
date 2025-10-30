@@ -14,11 +14,9 @@ export function EnergyTrends({ selectedYear, data }: EnergyTrendsProps) {
 
     return data
       .filter((d) => {
-        // Untuk tahun berjalan, filter berdasarkan bulan saat ini
         if (d.year === currentYear) {
           return d.year === selectedYear && d.month <= currentMonth;
         }
-        // Untuk tahun-tahun sebelumnya, tampilkan semua bulan
         return d.year === selectedYear;
       })
       .map((d) => {

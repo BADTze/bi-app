@@ -14,7 +14,7 @@ interface StatsSummaryProps {
 
 export function StatsSummary({ actualStats, forecastStats, diffPercent }: StatsSummaryProps) {
   return (
-    <Card className="flex-1 w-60 bg-gray-100">
+    <Card className="flex-1 w-60 bg-gray-200">
       <CardHeader>
         <CardTitle>Summary</CardTitle>
       </CardHeader>

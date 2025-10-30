@@ -10,13 +10,13 @@ interface ForecastRow {
 
 export function ForecastTable({ forecastData }: { forecastData: ForecastRow[] }) {
   return (
-    <Card className="flex-1 min-w-[300px] bg-gray-100">
-      <CardHeader>
+    <Card className="flex-1 min-w-[300px] bg-gray-200 gap-3 py-3">
+      <CardHeader className="px-3">
         <CardTitle>Data Forecast</CardTitle>
       </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
+      <CardContent className="px-3">
+        <Table className="bg-white rounded-lg">
+          <TableHeader className="bg-gray-100">
             <TableRow>
               <TableHead>DATE</TableHead>
               <TableHead>Forecast Value</TableHead>

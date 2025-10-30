@@ -177,7 +177,7 @@ export function ForecastPage() {
     <div className="flex w-full">
       <div className="flex w-full flex-wrap gap-2">
         {/* Chart Section */}
-        <div className="w-full border-1 bg-gray-100 rounded-lg p-2 shadow-sm">
+        <div className="w-full border-1 bg-gray-200 rounded-lg p-2 shadow-sm">
           <div className="flex justify-between items-center mb-2">
             <h3 className="font-bold text-lg">Forecast vs Actual (GJ/Kl)</h3>
 
@@ -209,7 +209,12 @@ export function ForecastPage() {
           <WarningBanner message={forecastWarning} />
 
           {/* Chart */}
-          <ForecastChart forecastData={forecastData} actualData={actualData} />
+          <div className="bg-white rounded-lg">
+            <ForecastChart
+              forecastData={forecastData}
+              actualData={actualData}
+            />
+          </div>
         </div>
 
         {/* Model & Stats Summary */}

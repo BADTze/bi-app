@@ -35,7 +35,7 @@ export function DeviationsCard({
     .sort((a, b) => a.date.localeCompare(b.date));
 
   return (
-    <Card className="flex-1 bg-gray-100">
+    <Card className="flex-1 bg-gray-200">
       <CardHeader>
         <CardTitle>Top {topN} Deviations</CardTitle>
       </CardHeader>
