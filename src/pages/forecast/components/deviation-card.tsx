@@ -35,26 +35,28 @@ export function DeviationsCard({
     .sort((a, b) => a.date.localeCompare(b.date));
 
   return (
-    <Card className="flex-1 bg-gray-200">
+    <Card className="flex-1 bg-gray-200 rounded-lg overflow-hidden gap-2 py-4">
       <CardHeader>
         <CardTitle>Top {topN} Deviations</CardTitle>
       </CardHeader>
-      <CardContent>
-        {deviations.length > 0 ? (
-          <ul className="text-sm space-y-2">
-            {deviations.map((d, i) => (
-              <li key={i} className="space-y-1 mb-2">
-                <span className="font-medium block">{d.date}</span>
-                <span className="text-left block">
-                  Forecast {d.forecast.toFixed(2)} vs Actual
-                  {d.actual.toFixed(2)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div>No deviations available</div>
-        )}
+      <CardContent className="h-full px-4">
+        <div className="bg-white p-2 rounded-lg h-full">
+          {deviations.length > 0 ? (
+            <ul className="text-sm space-y-2">
+              {deviations.map((d, i) => (
+                <li key={i} className="space-y-1 mb-2">
+                  <span className="font-medium block">{d.date}</span>
+                  <span className="text-left block">
+                    Forecast {d.forecast.toFixed(2)} vs Actual
+                    {d.actual.toFixed(2)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div>No deviations available</div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
