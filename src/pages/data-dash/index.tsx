@@ -1,3 +1,6 @@
+import { BillingSection } from "./components/billing-section";
+
+
 export function DataDash() {
-  return <h1>Data dashboard</h1>;
+  return <BillingSection/>
 }
