@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { CorrelationInfo } from "@/components/correlation-section/corr-info";
-import { VifInfo } from "./vif-info";
-import { RegressionInfo } from "./regression-info";
+import { CorrelationInfo } from "@/pages/correlation/components/corr-info";
+import { VifInfo } from "@/pages/correlation/components/vif-info";
+import { RegressionInfo } from "@/pages/correlation/components/regression-info";
 
 interface ApiResponse {
   correlation: {

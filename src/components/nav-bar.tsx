@@ -4,9 +4,9 @@ const Navbar = () => {
   const location = useLocation();
 
   const navItems = [
-    { label: "Home", path: "/" },
-    { label: "Forecast", path: "/forecast" },
-    { label: "Data", path: "/data-dash" },
+    { label: "Forecast", path: "/" },
+    { label: "Correlation Analisys", path: "/correlation" },
+    { label: "Data Insight", path: "/data-dash" },
   ];
 
   return (

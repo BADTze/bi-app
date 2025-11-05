@@ -16,7 +16,6 @@ export function EnergyTable({ selectedYear, data }: EnergyTableProps) {
           <thead className="bg-white border-b">
             <tr>
               <th className="px-3 py-2 text-left font-medium">Date</th>
-              <th className="px-3 py-2 text-right font-medium">Diesel</th>
               <th className="px-3 py-2 text-right font-medium">Electricity</th>
               <th className="px-3 py-2 text-right font-medium">Natural Gas</th>
               <th className="px-3 py-2 text-right font-medium">Index Energy</th>
@@ -31,7 +30,6 @@ export function EnergyTable({ selectedYear, data }: EnergyTableProps) {
                     month: "short",
                   })}
                 </td>
-                <td className="px-3 py-1 text-right">{row.values.dieselValue?.toFixed(2) ?? "-"}</td>
                 <td className="px-3 py-1 text-right">{row.values.electricity?.toFixed(2) ?? "-"}</td>
                 <td className="px-3 py-1 text-right">{row.values.naturalGas?.toFixed(2) ?? "-"}</td>
                 <td className="px-3 py-1 text-right font-semibold text-blue-700">

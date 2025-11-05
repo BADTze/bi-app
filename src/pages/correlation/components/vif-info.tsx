@@ -80,7 +80,8 @@ export function VifInfo() {
       <h3 className="text-lg font-medium mb-4">VIF Analysis</h3>
       <ReactECharts option={option} style={{ height: 300 }} />
       <p className="text-xs text-gray-500 mt-2">
-        ℹ️ VIF &gt; 5 biasanya menandakan adanya multikolinearitas tinggi antar variable independent.
+        VIF &gt; 5 biasanya menandakan adanya multikolinearitas tinggi antar
+        variable independent.
       </p>
     </div>
   );

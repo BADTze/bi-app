@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { EnergyTrends } from "@/components/energy-section/energy-trends";
-import { EnergyTable } from "@/components/energy-section/energy-table";
+import { EnergyTrends } from "@/pages/correlation/components/energy-section/energy-trends";
+import { EnergyTable } from "@/pages/correlation/components/energy-section/energy-table";
 import {
   Select,
   SelectTrigger,

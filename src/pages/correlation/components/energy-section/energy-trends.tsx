@@ -52,13 +52,6 @@ export function EnergyTrends({ selectedYear, data }: EnergyTrendsProps) {
             color="#059669"
           />
         </div>
-        <div className="border rounded-lg bg-gray-50 p-2 h-52">
-          <LineTrendChart
-            title="Diesel Consumption"
-            data={extractCategory("dieselValue")}
-            color="#1e3a8a"
-          />
-        </div>
       </div>
     </div>
   );

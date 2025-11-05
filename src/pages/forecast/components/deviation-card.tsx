@@ -47,8 +47,7 @@ export function DeviationsCard({
                 <li key={i} className="space-y-1 mb-2">
                   <span className="font-medium block">{d.date}</span>
                   <span className="text-left block">
-                    Forecast {d.forecast.toFixed(2)} vs Actual
-                    {d.actual.toFixed(2)}
+                    Forecast {d.forecast.toFixed(2)} vs Actual {d.actual.toFixed(2)}
                   </span>
                 </li>
               ))}

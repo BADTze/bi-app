@@ -1,5 +1,5 @@
 import { HeatmapChart } from "@/components/heatmap";
-import { RegressionPlot } from "@/components/correlation-section/regression-plot";
+import { RegressionPlot } from "@/pages/correlation/components/regression-plot";
 
 interface Props {
   title: string;
