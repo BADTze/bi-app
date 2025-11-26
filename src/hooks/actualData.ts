@@ -12,7 +12,7 @@ export function useActualData(category: string, year: string) {
   useEffect(() => {
     const fetchRawData = async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:5000/bi-apps/api/clean_data?extend=true`);
+        const res = await fetch(`http://127.0.0.1:5000/bi-apps/api/clean_data`);
         const data = await res.json();
 
         if (!Array.isArray(data)) {
