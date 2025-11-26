@@ -25,6 +25,17 @@ const FilterBar: React.FC<FilterBarProps> = ({
   years,
   onSubmit,
 }) => {
+  // Buat daftar tahun dinamis: tahun historis + 3 tahun ke depan dari tahun terakhir historis
+  let yearNums = years.map((y) => parseInt(y, 10)).filter((y) => !isNaN(y));
+  let maxYear = yearNums.length > 0 ? Math.max(...yearNums) : new Date().getFullYear();
+  let minYear = yearNums.length > 0 ? Math.min(...yearNums) : new Date().getFullYear();
+  let dynamicYears = [];
+  for (let y = minYear; y <= maxYear + 3; y++) {
+    dynamicYears.push(String(y));
+  }
+  // Hilangkan duplikat dan urutkan
+  dynamicYears = Array.from(new Set(dynamicYears)).sort();
+
   return (
     <div className="flex flex-wrap items-center gap-2 p-2">
       {/* Category Select */}
@@ -45,8 +56,8 @@ const FilterBar: React.FC<FilterBarProps> = ({
           <SelectValue placeholder="Pilih Tahun" />
         </SelectTrigger>
         <SelectContent>
-          {years.length > 0 ? (
-            years.map((yr) => (
+          {dynamicYears.length > 0 ? (
+            dynamicYears.map((yr) => (
               <SelectItem key={yr} value={yr}>
                 {yr}
               </SelectItem>

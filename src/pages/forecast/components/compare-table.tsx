@@ -25,6 +25,7 @@ export function CompareTable({ forecastData, actualData }: { forecastData: Forec
               <TableHead>DATE</TableHead>
               <TableHead>Forecast Value</TableHead>
               <TableHead>Actual Value</TableHead>
+              <TableHead>Gap</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -32,17 +33,22 @@ export function CompareTable({ forecastData, actualData }: { forecastData: Forec
               allDates.map((date, i) => {
                 const forecast = forecastData.find(f => f.date === date);
                 const actual = actualData.find(a => a.date === date);
+                let gap = "-";
+                if (forecast?.forecastValue != null && actual?.value != null) {
+                  gap = (forecast.forecastValue - actual.value).toFixed(2);
+                }
                 return (
                   <TableRow key={i}>
                     <TableCell>{date}</TableCell>
                     <TableCell>{forecast?.forecastValue?.toFixed(2) ?? "-"}</TableCell>
                     <TableCell>{actual?.value?.toFixed(2) ?? "-"}</TableCell>
+                    <TableCell>{gap}</TableCell>
                   </TableRow>
                 );
               })
             ) : (
               <TableRow>
-                <TableCell colSpan={3} className="text-center">
+                <TableCell colSpan={4} className="text-center">
                   No data available
                 </TableCell>
               </TableRow>

@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/select";
 
 interface BillingData {
-  date: string;         
-  total_cost: number;   
-  total_electricity: number;  
-  price_per_kwh: number; 
+  date: string;
+  total_cost: number;
+  total_electricity: number;
+  price_per_kwh: number;
 }
 
 export function BillingSection() {
@@ -28,16 +28,19 @@ export function BillingSection() {
     const fetchBilling = async () => {
       setLoading(true);
       setError(null);
+
       try {
         const res = await fetch(
-          `http://127.0.0.1:5000/bi-apps/api/billing?year=${year}`
+          `http://localhost:5000/bi-apps/api/billing?year=${year}`
         );
         const json = await res.json();
-        if (res.ok && Array.isArray(json)) {
-          setData(json);
+
+        // Backend return { electricity: [...], naturalGas: [...] }
+        if (res.ok && json.electricity && Array.isArray(json.electricity)) {
+          setData(json.electricity);
         } else {
           setData([]);
-          setError(json.message || "No billing data found.");
+          setError("No billing data found.");
         }
       } catch (err) {
         setError("Failed to fetch billing data.");
@@ -59,19 +62,19 @@ export function BillingSection() {
     return {
       month,
       year,
-      label: `${month}-${year}`
+      label: `${month}-${year}`,
     };
   };
 
   // Prepare data for charts
   const electricityData = data.map((d) => ({
     ...formatDateForChart(d.date),
-    value: d.total_electricity
+    value: d.total_electricity,
   }));
 
   const priceData = data.map((d) => ({
     ...formatDateForChart(d.date),
-    value: d.price_per_kwh
+    value: d.price_per_kwh,
   }));
 
   return (

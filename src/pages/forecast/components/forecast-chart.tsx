@@ -20,7 +20,6 @@ interface ForecastChartProps {
 
 // Helper untuk menggabungkan data
 function mergeData(forecastData: ForecastRow[], actualData: ActualRow[]) {
-  // Buat map dari data aktual berdasarkan tanggal
   const actualMap = new Map(actualData.map((d) => [d.date, d.value]));
 
   // Gabungkan kedua data. Kita menggunakan forecastData sebagai basis karena
