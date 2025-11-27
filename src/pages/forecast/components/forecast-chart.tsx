@@ -30,7 +30,6 @@ function mergeData(forecastData: ForecastRow[], actualData: ActualRow[]) {
       forecastValue: forecastItem.forecastValue,
       upperValue: forecastItem.upperValue,
       lowerValue: forecastItem.lowerValue,
-      // Ambil nilai aktual jika ada, jika tidak, gunakan null
       actualValue: actualMap.get(forecastItem.date) ?? null,
     };
   });
@@ -73,10 +72,17 @@ export function ForecastChart({
       height: 400,
       toolbar: { show: false },
     },
-    colors: ["#ca4e4d", "#5585fe", "#f59d00", "#f59d00"], // Sesuaikan warna
+    colors: ["#ca4e4d", "#5585fe", "#f59d00", "#f59d00"],
     stroke: { curve: "smooth", width: [3, 3, 3, 3] },
     xaxis: {
       type: "datetime",
+      labels: {
+        formatter: (val) => {
+          // Format ke 'MMM yyyy' (Jan 2025)
+          const d = new Date(val);
+          return d.toLocaleString("en-US", { month: "short", year: "numeric" });
+        },
+      },
     },
     yaxis: {
       labels: {
@@ -84,6 +90,12 @@ export function ForecastChart({
       },
     },
     tooltip: {
+      x: {
+        formatter: (val) => {
+          const d = new Date(val);
+          return d.toLocaleString("en-US", { month: "short", year: "numeric" });
+        },
+      },
       y: {
         formatter: (val) => (val !== null ? val.toFixed(2) : ""),
       },
