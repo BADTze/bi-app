@@ -26,7 +26,6 @@ export function ForecastPage() {
   const { actualData, availableYears } = useActualData(category, year);
   const { evaluation } = useEvaluation(model, category);
 
-  // utility stats
   const getStats = (arr: number[]) => {
     const clean = arr.filter((v) => v > 0);
     if (!clean.length) return { min: 0, max: 0, avg: 0 };
@@ -39,12 +38,10 @@ export function ForecastPage() {
       max: Math.max(...clean),
       avg: Number(avg.toFixed(2)),
     };
-  };
+  };;
 
   const actualStats = getStats(actualData.map((d) => d.value));
-  const forecastStats = getStats(
-    forecastData.map((d) => d.forecastValue ?? 0)
-  );
+  const forecastStats = getStats(forecastData.map((d) => d.forecastValue ?? 0));
 
   const diffPercent =
     actualStats.avg > 0
@@ -62,9 +59,24 @@ export function ForecastPage() {
             {/* Tabs Model */}
             <Tabs value={pendingModel} onValueChange={setPendingModel}>
               <TabsList className="rounded-md border-2 p-0.5 gap-1">
-                <TabsTrigger value="prophet">Prophet</TabsTrigger>
-                <TabsTrigger value="sarimax">Sarimax</TabsTrigger>
-                <TabsTrigger value="linear">Linear</TabsTrigger>
+                <TabsTrigger
+                  value="prophet"
+                  className="px-3 py-1 rounded-md border-2 border-gray-300 bg-white text-gray-400 data-[state=active]:bg-gray-600 data-[state=active]:text-black data-[state=active]:border-black"
+                >
+                  Prophet
+                </TabsTrigger>
+                <TabsTrigger
+                  value="sarimax"
+                  className="px-3 py-1 rounded-md border-2 border-gray-300 bg-white text-gray-400 data-[state=active]:bg-gray-600 data-[state=active]:text-black data-[state=active]:border-black"
+                >
+                  Sarimax
+                </TabsTrigger>
+                <TabsTrigger
+                  value="linear"
+                  className="px-3 py-1 rounded-md border-2 border-gray-300 bg-white text-gray-400 data-[state=active]:bg-gray-600 data-[state=active]:text-black data-[state=active]:border-black"
+                >
+                  Linear
+                </TabsTrigger>
               </TabsList>
             </Tabs>
 
@@ -87,7 +99,10 @@ export function ForecastPage() {
 
           {/* Chart */}
           <div className="bg-white rounded-lg">
-            <ForecastChart forecastData={forecastData} actualData={actualData} />
+            <ForecastChart
+              forecastData={forecastData}
+              actualData={actualData}
+            />
           </div>
         </div>
 
