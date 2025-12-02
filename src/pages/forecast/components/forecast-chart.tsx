@@ -21,9 +21,6 @@ interface ForecastChartProps {
 // Helper untuk menggabungkan data
 function mergeData(forecastData: ForecastRow[], actualData: ActualRow[]) {
   const actualMap = new Map(actualData.map((d) => [d.date, d.value]));
-
-  // Gabungkan kedua data. Kita menggunakan forecastData sebagai basis karena
-  // mencakup semua tanggal (historical + forecast).
   const merged = forecastData.map((forecastItem) => {
     return {
       date: forecastItem.date,
@@ -73,12 +70,11 @@ export function ForecastChart({
       toolbar: { show: false },
     },
     colors: ["#ca4e4d", "#5585fe", "#f59d00", "#f59d00"],
-    stroke: { curve: "smooth", width: [3, 3, 3, 3] },
+    stroke: { curve: "smooth", width: [2, 2, 2, 2] },
     xaxis: {
       type: "datetime",
       labels: {
         formatter: (val) => {
-          // Format ke 'MMM yyyy' (Jan 2025)
           const d = new Date(val);
           return d.toLocaleString("en-US", { month: "short", year: "numeric" });
         },
