@@ -52,10 +52,27 @@ export function StatsSummary({
           </table>
 
           {diffPercent !== null && (
-            <div className="mt-3 text-xs text-gray-600">
-              Forecast rata-rata{" "}
-              {diffPercent > 0 ? "lebih tinggi" : "lebih rendah"}{" "}
-              {Math.abs(diffPercent).toFixed(2)}% dibanding Actual.
+            <div className="mt-3 text-xs text-gray-600 flex items-center gap-1">
+              {Math.abs(diffPercent) < 0.1 ? (
+                <>Rata-rata forecast hampir sama dengan actual.</>
+              ) : (
+                <>
+                  Rata-rata forecast{" "}
+                  <span className={diffPercent > 0 ? "text-green-700" : "text-red-700"}>
+                    {diffPercent > 0 ? (
+                      <>
+                        lebih tinggi <span title="lebih tinggi">▲</span>
+                      </>
+                    ) : (
+                      <>
+                        lebih rendah <span title="lebih rendah">▼</span>
+                      </>
+                    )}
+                  </span>
+                  <b className="mx-1">{Math.abs(diffPercent).toFixed(2)}%</b>
+                  dibanding actual.
+                </>
+              )}
             </div>
           )}
         </div>
