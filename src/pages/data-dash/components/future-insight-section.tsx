@@ -6,7 +6,7 @@ import { PeakForecastEnergyIndex } from "./future-insight-components/peak-foreca
 
 export function FutureInsightSection() {
   return (
-    <div className="grid grid-cols-3 gap-4 w-full p-4 bg-gray-200">
+    <div className="grid grid-cols-3 gap-4 w-full p-4 bg-gray-200 rounded-2xl">
       {/* ----- LEFT COLUMN ----- */}
       <div className="col-span-2 flex flex-col gap-4">
         <ForecastCompareChart year={2026} />
