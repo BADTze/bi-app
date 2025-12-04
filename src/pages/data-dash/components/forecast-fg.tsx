@@ -129,7 +129,7 @@ export default function ForecastFGChart({ year }: ForecastFGChartProps) {
   };
 
   return (
-    <div className="w-full h-96 p-4 bg-white rounded-xl shadow-sm flex flex-col justify-center">
+    <div className="w-full p-4 bg-white rounded-xl shadow-sm flex flex-col justify-center" style={{height: 'min(24rem,40vw)'}}>
       <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
     </div>
   );

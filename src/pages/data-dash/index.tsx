@@ -1,11 +1,9 @@
-import ForecastCompareChart from "./components/forecast-compare";
-import ForecastFGChart from "./components/forecast-fg";
+import { FutureInsightSection } from "./components/future-insight-section";
 
 export function DataDash() {
   return (
-    <div className="p-4 space-y-6">
-      <ForecastCompareChart year={2026} />
-      <ForecastFGChart year={2026} />
+    <div>
+      <FutureInsightSection />
     </div>
   );
 }
