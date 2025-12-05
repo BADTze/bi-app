@@ -23,7 +23,7 @@ export function useForecastCompare(year: number) {
     setLoading(true);
     setError(null);
 
-    fetch(`http://localhost:5000/bi-apps/api/forecast_compare?year=${year}`)
+    fetch(`/bi-apps/api/forecast_compare?year=${year}`)
       .then(async (res) => {
         if (!res.ok) throw new Error("Failed to fetch forecast compare data");
         const json: ForecastCompareResponse = await res.json();

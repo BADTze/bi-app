@@ -2,7 +2,7 @@ import ForecastCompareChart from "./forecast-compare";
 import ForecastFGChart from "./forecast-fg";
 import { CapacityPlanningCard } from "./future-insight-components/capacity-plan-card";
 import { KPIOutlook } from "./future-insight-components/kpi-outlook-card";
-import { PeakForecastEnergyIndex } from "./future-insight-components/peak-forecast-card";
+import { PeakForecast } from "./future-insight-components/peak-forecast-card";
 
 export function FutureInsightSection() {
   return (
@@ -17,7 +17,7 @@ export function FutureInsightSection() {
       <div className="col-span-1 grid grid-rows-2 gap-4">
         {/* ROW 1 - Peak + KPI */}
         <div className="grid grid-cols-2 gap-4">
-          <PeakForecastEnergyIndex />
+          <PeakForecast />
           <KPIOutlook />
         </div>
 

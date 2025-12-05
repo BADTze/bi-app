@@ -20,7 +20,7 @@ export function KPIOutlook() {
   const kpi = data.kpi_outlook;
 
   return (
-    <Card className="p-2 shadow-md gap-2 max-h-56">
+    <Card className="p-2 shadow-md gap-2 max-h-60">
       <CardHeader className="p-0">
         <CardTitle className="text-xl font-bold text-gray-900">
           KPI OUTLOOK
@@ -48,19 +48,30 @@ export function KPIOutlook() {
           </div>
         </div>
 
-        {/* Status */}
-        {/* <div className="text-center mt-2">
-          <span className="text-sm text-gray-500">Status</span>
+        {/* Persentase di bawah/atas target dengan panah dan warna */}
+        <div className="text-center mt-2">
           <div
-            className={`mt-1 inline-block px-4 py-1 rounded-full text-sm font-semibold ${
-              kpi.status === "RED"
-                ? "bg-red-100 text-red-700"
-                : "bg-green-100 text-green-700"
-            }`}
+            className={`text-xs mt-1 font-semibold ${
+              kpi.status === "RED" ? "text-red-600" : "text-green-600"
+            } flex items-center justify-center gap-1`}
           >
-            {kpi.status}
+            {Math.abs(kpi.gap) > 0 ? (
+              <>
+                {kpi.status === "RED" ? (
+                  <span className="inline-block">▲</span>
+                ) : (
+                  <span className="inline-block">▼</span>
+                )}
+                <span>
+                  {((Math.abs(kpi.gap) / kpi.target) * 100).toFixed(1)}%{" "}
+                  {kpi.status === "RED" ? "di atas" : "di bawah"} target
+                </span>
+              </>
+            ) : (
+              <span className="text-green-600">Tepat di target</span>
+            )}
           </div>
-        </div> */}
+        </div>
       </CardContent>
     </Card>
   );

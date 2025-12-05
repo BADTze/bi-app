@@ -12,7 +12,13 @@ export default function ForecastFGChart({ year }: ForecastFGChartProps) {
   if (error) return <p className="text-red-500">{error}</p>;
   if (!data) return <p>No forecast data available.</p>;
 
-  const categories = data.map((d) => d.ds.slice(0, 7));
+  // Format label: mm-yyyy
+  const categories = data.map((d) => {
+    const date = new Date(d.ds);
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return `${mm}-${yyyy}`;
+  });
 
   const option = {
     title: {
