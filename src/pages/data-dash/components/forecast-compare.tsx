@@ -1,14 +1,21 @@
 import ReactECharts from "echarts-for-react";
 import { useForecastCompare } from "@/hooks/forecast_comp";
+import { useState } from "react";
 
 interface ForecastCompareChartProps {
   year: number;
+  defaultCategory?: string;
 }
 
-export default function ForecastCompareChart({
-  year,
-}: ForecastCompareChartProps) {
-  const { data, loading, error } = useForecastCompare(year);
+const CATEGORY_OPTIONS = [
+  { value: "indexEnergy", label: "Index Energy" },
+  { value: "electricity", label: "Electricity" },
+  { value: "naturalGas", label: "Natural Gas" },
+];
+
+export default function ForecastCompareChart({ year, defaultCategory = "indexEnergy" }: ForecastCompareChartProps) {
+  const [category, setCategory] = useState(defaultCategory);
+  const { data, loading, error } = useForecastCompare(year, category);
 
   if (loading) return <p>Loading comparison...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -156,6 +163,19 @@ export default function ForecastCompareChart({
 
   return (
     <div className="w-full p-4 bg-white rounded-xl shadow-sm flex flex-col justify-center" style={{height: 'min(24rem,40vw)'}}>
+      <div className="mb-4 flex items-center gap-2">
+        <label htmlFor="category-select" className="font-medium text-gray-700">Category:</label>
+        <select
+          id="category-select"
+          value={category}
+          onChange={e => setCategory(e.target.value)}
+          className="border rounded px-2 py-1 text-sm"
+        >
+          {CATEGORY_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
       <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
     </div>
   );

@@ -1,4 +1,4 @@
-import type { FutureInsight } from "@/lib/utils";
+import type { FutureInsight } from "@/utils/type";
 import { useEffect, useState } from "react";
 
 export function useFutureInsight() {

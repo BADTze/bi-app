@@ -14,7 +14,7 @@ export interface ForecastCompareResponse {
   value: ForecastCompareItem[];
 }
 
-export function useForecastCompare(year: number) {
+export function useForecastCompare(year: number, category: string) {
   const [data, setData] = useState<ForecastCompareItem[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export function useForecastCompare(year: number) {
     setLoading(true);
     setError(null);
 
-    fetch(`/bi-apps/api/forecast_compare?year=${year}`)
+    fetch(`/bi-apps/api/forecast_compare?year=${year}&category=${category}`)
       .then(async (res) => {
         if (!res.ok) throw new Error("Failed to fetch forecast compare data");
         const json: ForecastCompareResponse = await res.json();
@@ -31,7 +31,7 @@ export function useForecastCompare(year: number) {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [year]);
+  }, [year, category]);
 
   return { data, loading, error };
 }

@@ -20,14 +20,18 @@ export function KPIOutlook() {
   const kpi = data.kpi_outlook;
 
   return (
-    <Card className="p-2 shadow-md gap-2 max-h-60">
-      <CardHeader className="p-0">
-        <CardTitle className="text-xl font-bold text-gray-900">
-          KPI OUTLOOK
+    <Card className="p-2 shadow-md max-h-60 max-w-60 gap-0">
+      <CardHeader className="p-0 gap-0">
+        <CardTitle className="text-lg font-bold text-gray-900">
+          KPI Index Energy Outlook
+          <span className="text-sm font-normal text-gray-500">
+            {" "}
+            (Based on Forecast)
+          </span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 p-0">
-        <div className="text-lg">Avg Forecast</div>
+        <div className="text-sm">Avg Forecast</div>
         {/* Avg Forecast */}
         <div className="text-center">
           <div className="text-5xl font-extrabold ">
