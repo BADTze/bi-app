@@ -35,18 +35,18 @@ export function StatsSummary({
             <tbody>
               <tr>
                 <td className="py-1">Min</td>
-                <td>{actualStats.min}</td>
-                <td>{forecastStats.min}</td>
+                <td>{Number(actualStats.min).toFixed(2)}</td>
+                <td>{Number(forecastStats.min).toFixed(2)}</td>
               </tr>
               <tr>
                 <td className="py-1">Max</td>
-                <td>{actualStats.max}</td>
-                <td>{forecastStats.max}</td>
+                <td>{Number(actualStats.max).toFixed(2)}</td>
+                <td>{Number(forecastStats.max).toFixed(2)}</td>
               </tr>
               <tr>
                 <td className="py-1">Avg</td>
-                <td>{actualStats.avg}</td>
-                <td>{forecastStats.avg}</td>
+                <td>{Number(actualStats.avg).toFixed(2)}</td>
+                <td>{Number(forecastStats.avg).toFixed(2)}</td>
               </tr>
             </tbody>
           </table>

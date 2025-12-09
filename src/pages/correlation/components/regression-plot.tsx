@@ -1,86 +1,70 @@
 import { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
+import { useCleanDataForAnalysis } from "@/hooks/cleanDataForAnalysis";
 
 interface Props {
   pair: string[];
-  label: string;
 }
 
-interface CleanDataItem {
-  year: string;
-  month: string;
-  values: Record<string, number>;
-}
-
-export function RegressionPlot({ pair, label }: Props) {
+export function RegressionPlot({ pair }: Props) {
+  const { data } = useCleanDataForAnalysis();
   const [scatterData, setScatterData] = useState<[number, number][]>([]);
   const [lineData, setLineData] = useState<[number, number][]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/bi-apps/api/clean_data?extend=false");
-        const data: CleanDataItem[] = await res.json();
-
-        if (Array.isArray(data) && pair.length === 2) {
-          const [xVar, yVar] = pair;
-          const filtered: [number, number][] = data
-            .map((d) => {
-              const x = d.values[xVar];
-              const y = d.values[yVar];
-              if (typeof x === "number" && typeof y === "number") {
-                return [x, y];
-              }
-              return null;
-            })
-            .filter((d): d is [number, number] => d !== null);
-
-          setScatterData(filtered);
-
-          // hitung regresi linear sederhana
-          const n = filtered.length;
-          if (n > 1) {
-            const xs = filtered.map(([x]) => x);
-            const ys = filtered.map(([, y]) => y);
-            
-            // Normalisasi data untuk menghindari masalah numerik
-            const meanX = xs.reduce((a, b) => a + b, 0) / n;
-            const meanY = ys.reduce((a, b) => a + b, 0) / n;
-            const stdX = Math.sqrt(xs.reduce((a, x) => a + (x - meanX) ** 2, 0) / n);
-            const stdY = Math.sqrt(ys.reduce((a, y) => a + (y - meanY) ** 2, 0) / n);
-            
-            // Hitung korelasi
-            const covariance = filtered.reduce((acc, [x, y]) => 
-              acc + (x - meanX) * (y - meanY), 0) / n;
-            const correlation = covariance / (stdX * stdY);
-            
-            // Hitung slope dan intercept
-            const slope = correlation * (stdY / stdX);
-            const intercept = meanY - slope * meanX;
-            
-            // Tentukan arah garis berdasarkan korelasi
-            const minX = Math.min(...xs);
-            const maxX = Math.max(...xs);
-            
-            // Buat titik-titik garis regresi
-            const linePoints: [number, number][] = [];
-            const steps = 100;
-            for (let i = 0; i <= steps; i++) {
-              const x = minX + (maxX - minX) * (i / steps);
-              const y = slope * x + intercept;
-              linePoints.push([x, y]);
-            }
-            
-            setLineData(linePoints);
+    if (Array.isArray(data) && data.length > 0 && pair.length === 2) {
+      const [xVar, yVar] = pair;
+      const filtered: [number, number][] = data
+        .map((d) => {
+          const x = d.values?.[xVar];
+          const y = d.values?.[yVar];
+          if (typeof x === "number" && typeof y === "number") {
+            return [x, y];
           }
-        }
-      } catch (err) {
-        console.error("Error fetching clean_data:", err);
-      }
-    };
+          return null;
+        })
+        .filter((d): d is [number, number] => d !== null);
 
-    fetchData();
-  }, [pair]);
+      setScatterData(filtered);
+
+      // hitung regresi linear sederhana
+      const n = filtered.length;
+      if (n > 1) {
+        const xs = filtered.map(([x]) => x);
+        const ys = filtered.map(([, y]) => y);
+        
+        // Normalisasi data untuk menghindari masalah numerik
+        const meanX = xs.reduce((a, b) => a + b, 0) / n;
+        const meanY = ys.reduce((a, b) => a + b, 0) / n;
+        const stdX = Math.sqrt(xs.reduce((a, x) => a + (x - meanX) ** 2, 0) / n);
+        const stdY = Math.sqrt(ys.reduce((a, y) => a + (y - meanY) ** 2, 0) / n);
+        
+        // Hitung korelasi
+        const covariance = filtered.reduce((acc, [x, y]) => 
+          acc + (x - meanX) * (y - meanY), 0) / n;
+        const correlation = covariance / (stdX * stdY);
+        
+        // Hitung slope dan intercept
+        const slope = correlation * (stdY / stdX);
+        const intercept = meanY - slope * meanX;
+        
+        // Tentukan arah garis berdasarkan korelasi
+        const minX = Math.min(...xs);
+        const maxX = Math.max(...xs);
+        
+        // Buat titik-titik garis regresi
+        const linePoints: [number, number][] = [];
+        const steps = 100;
+        for (let i = 0; i <= steps; i++) {
+          const x = minX + (maxX - minX) * (i / steps);
+          const y = slope * x + intercept;
+          linePoints.push([x, y]);
+        }
+        
+        setLineData(linePoints);
+      }
+    }
+  }, [data, pair]);
 
   const formatNumber = (val: number) =>
     val.toLocaleString("en-US", { maximumFractionDigits: 2 });
@@ -97,11 +81,6 @@ export function RegressionPlot({ pair, label }: Props) {
   const paddingY = (maxY - minY) * 0.1;
 
   const option = {
-    title: {
-      text: `${pair[0]} vs ${pair[1]} ${label}`,
-      left: "center",
-      textStyle: { fontSize: 12 },
-    },
     tooltip: {
       trigger: "item",
       formatter: (params: any) => {
