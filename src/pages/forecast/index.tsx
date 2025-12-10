@@ -16,11 +16,11 @@ import { useEvaluation } from "@/hooks/modelEvaluation";
 export function ForecastPage() {
   const [model, setModel] = useState("prophet");
   const [category, setCategory] = useState("indexEnergy");
-  const [year, setYear] = useState("2025");
+  const [year, setYear] = useState("2026");
 
   const [pendingModel, setPendingModel] = useState("prophet");
   const [pendingCategory, setPendingCategory] = useState("indexEnergy");
-  const [pendingYear, setPendingYear] = useState("2025");
+  const [pendingYear, setPendingYear] = useState("2026");
 
   const { forecastData, warning } = useForecast(model, category, year);
   const { actualData, availableYears } = useActualData(category, year);
