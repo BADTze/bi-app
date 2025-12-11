@@ -13,7 +13,10 @@ const formatCurrency = (value: number | undefined): string => {
 };
 
 // Format angka dengan titik koma
-const formatNumber = (value: number | undefined, decimals: number = 2): string => {
+const formatNumber = (
+  value: number | undefined,
+  decimals: number = 2
+): string => {
   if (value === undefined || value === null) return "-";
   return new Intl.NumberFormat("id-ID", {
     minimumFractionDigits: decimals,
@@ -69,13 +72,13 @@ export function CostProjectionCard() {
           <div>
             <p className="text-gray-600">Avg Price (Electricity)</p>
             <p className="font-semibold">
-              ${formatNumber(cost.avg_price_per_kwh, 4)}/kWh
+              {formatCurrency(cost.avg_price_per_kwh)}/kWh
             </p>
           </div>
           <div>
             <p className="text-gray-600">Avg Price (Natural Gas)</p>
             <p className="font-semibold">
-              ${formatNumber(cost.avg_price_per_mmbtu, 4)}/MMBTU
+              {formatCurrency(cost.avg_price_per_mmbtu)}/MMBTU
             </p>
           </div>
         </div>
