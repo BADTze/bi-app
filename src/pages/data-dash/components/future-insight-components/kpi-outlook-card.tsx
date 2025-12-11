@@ -22,37 +22,31 @@ export function KPIOutlook() {
   return (
     <Card className="p-2 shadow-md max-h-60 max-w-60 gap-0">
       <CardHeader className="p-0 gap-0">
-        <CardTitle className="text-lg font-bold text-gray-900">
+        <CardTitle className="text-base font-bold text-gray-800">
           KPI Index Energy Outlook
-          <span className="text-sm font-normal text-gray-500">
-            {" "}
-            (Based on Forecast)
-          </span>
         </CardTitle>
+        <p className="text-sm font-normal text-gray-500 mt-1">
+          (Based on Forecast)
+        </p>
       </CardHeader>
       <CardContent className="space-y-4 p-0">
         <div className="text-sm">Avg Forecast</div>
-        {/* Avg Forecast */}
         <div className="text-center">
-          <div className="text-5xl font-extrabold ">
+          <div className="text-5xl font-extrabold">
             {kpi.avg_forecast.toFixed(2)}
           </div>
         </div>
-
-        {/* Target + Gap */}
         <div className="flex justify-center items-center space-x-4 text-lg text-gray-700">
           <div className="flex items-center space-x-1">
             <span className="font-medium">Target</span>
-            <span className="font-bold ">{kpi.target.toFixed(2)}</span>
+            <span className="font-bold">{kpi.target.toFixed(2)}</span>
           </div>
           <span className="font-bold">~</span>
           <div className="flex items-center space-x-1">
             <span className="font-medium">Gap</span>
-            <span className="font-bold ">{kpi.gap.toFixed(2)}</span>
+            <span className="font-bold">{kpi.gap.toFixed(2)}</span>
           </div>
         </div>
-
-        {/* Persentase di bawah/atas target dengan panah dan warna */}
         <div className="text-center mt-2">
           <div
             className={`text-xs mt-1 font-semibold ${

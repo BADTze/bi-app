@@ -1,10 +1,8 @@
 import ForecastCompareChart from "./forecast-compare";
 import ForecastFGChart from "./forecast-fg";
-import { CapacityPlanningCard } from "./future-insight-components/capacity-planning-card";
-import { ScenarioSimulationCard } from "./future-insight-components/cost-projection-card";
+import { CostProjectionCard } from "./future-insight-components/cost-projection-card";
 import { KPIOutlook } from "./future-insight-components/kpi-outlook-card";
-import { CostProjectionCard } from "./future-insight-components/scenario-simulation-card";
-import { SummaryCard } from "./future-insight-components/summary-card";
+import { PeakForecastIndexCard } from "./future-insight-components/peak-index-card";
 
 export function FutureInsightSection() {
   return (
@@ -16,12 +14,16 @@ export function FutureInsightSection() {
       </div>
 
       {/* ----- RIGHT COLUMN ----- */}
-      <div className="col-span-1 grid grid-rows-2 gap-4">
-        <KPIOutlook />
-        <SummaryCard />
-        <CapacityPlanningCard />
+      <div className="gap-2">
+        <div className="flex gap-4 max-h-56 mb-4">
+          <div className="flex-shrink-0">
+            <KPIOutlook />
+          </div>
+          <div className="flex-1">
+            <PeakForecastIndexCard />
+          </div>
+        </div>
         <CostProjectionCard />
-        <ScenarioSimulationCard />
       </div>
     </div>
   );

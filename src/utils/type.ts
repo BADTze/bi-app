@@ -14,12 +14,24 @@ export interface InsightSummary {
   avg_productKl: number;
   total_energy_yearly: number;
   peak_index_energy: PeakIndexEnergy;
+  peak_month: PeakMonthData;
 }
 
 export interface PeakIndexEnergy {
   prophet: number;
-  sarimax: number;
-  linear: number;
+  sarimax: number | null;
+  linear: number | null;
+}
+
+export interface PeakMonthInfo {
+  month: string;
+  index_energy: number;
+}
+
+export interface PeakMonthData {
+  prophet: PeakMonthInfo[];
+  sarimax: PeakMonthInfo[];
+  linear: PeakMonthInfo[];
 }
 
 /* ----------------------------- KPI OUTLOOK ----------------------------- */
@@ -34,30 +46,35 @@ export interface KPIOutlook {
 /* ------------------------ CAPACITY PLANNING ------------------------ */
 
 export interface CapacityPlanning {
+  best_electricity_model: string;
+  best_natural_gas_model: string; 
   required_electricity_gj: number;
   required_natural_gas_gj: number;
   total_energy_gj_next_year: number;
 
   peak_load: {
     electricity: {
-      month: string;
-      value_gj: number;
+      month: string | null;
+      value_gj: number | null;
     };
     natural_gas: {
-      month: string;
-      value_gj: number;
+      month: string | null;
+      value_gj: number | null;
     };
   };
 
-  recommended_capacity_electricity_gj: number;
-  recommended_capacity_natural_gas_gj: number;
+  recommended_capacity_electricity_gj: number | null;
+  recommended_capacity_natural_gas_gj: number | null;
 }
 
 /* ------------------------ COST PROJECTION ------------------------ */
 
 export interface CostProjection {
-  avg_price_per_gj_electricity: number;
-  avg_price_per_gj_natural_gas: number;
+  total_electricity_kwh: number;
+  total_natural_gas_mmbtu: number;
+
+  avg_price_per_kwh: number;
+  avg_price_per_mmbtu: number;
 
   electricity_cost_est: number;
   natural_gas_cost_est: number;
