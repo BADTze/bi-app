@@ -65,6 +65,16 @@ export interface CapacityPlanning {
 
   recommended_capacity_electricity_kwh: number | null;
   recommended_capacity_natural_gas_mmbtu: number | null;
+
+  natural_gas_anomalies: NaturalGasAnomaly[];
+}
+
+export interface NaturalGasAnomaly {
+  type: "below_minimum" | "above_maximum";
+  month: string;
+  value: number;
+  threshold: number;
+  message: string;
 }
 
 /* ------------------------ COST PROJECTION ------------------------ */
