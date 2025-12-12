@@ -7,25 +7,20 @@ export interface ForecastRow {
   lowerValue: number | null;
 }
 
-export function useForecast(model: string, category: string, year: string) {
+export function useHistoricalForecast(model: string, category: string) {
   const [forecastData, setForecastData] = useState<ForecastRow[]>([]);
   const [warning, setWarning] = useState("");
 
   useEffect(() => {
     const fetchForecast = async () => {
       try {
-        // Jika year = 2025, gunakan historical_forecast endpoint
-        const endpoint = year === "2025" 
-          ? `http://127.0.0.1:5000/bi-apps/api/historical_forecast?model=${model}&category=${category}`
-          : `http://127.0.0.1:5000/bi-apps/api/forecast?model=${model}&category=${category}&year=${year}`;
-
-        const res = await fetch(endpoint);
+        const res = await fetch(
+          `http://127.0.0.1:5000/bi-apps/api/historical_forecast?model=${model}&category=${category}`
+        );
         const data = await res.json();
 
-        if (!data.forecast || data.forecast.length < 6) {
-          setWarning(
-            "Model tidak bisa membaca Forecast. Terlalu sedikit data observasi."
-          );
+        if (!data.forecast || data.forecast.length === 0) {
+          setWarning("Tidak ada data historical forecast untuk 2025.");
           setForecastData([]);
           return;
         }
@@ -41,14 +36,14 @@ export function useForecast(model: string, category: string, year: string) {
 
         setForecastData(mapped);
       } catch (err) {
-        console.error("Error fetching forecast:", err);
-        setWarning("Gagal mengambil forecast dari server.");
+        console.error("Error fetching historical forecast:", err);
+        setWarning("Gagal mengambil historical forecast dari server.");
         setForecastData([]);
       }
     };
 
     fetchForecast();
-  }, [model, category, year]);
+  }, [model, category]);
 
   return { forecastData, warning };
 }

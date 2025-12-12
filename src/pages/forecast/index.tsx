@@ -38,7 +38,7 @@ export function ForecastPage() {
       max: Math.max(...clean),
       avg: Number(avg.toFixed(2)),
     };
-  };;
+  };
 
   const actualStats = getStats(actualData.map((d) => d.value));
   const forecastStats = getStats(forecastData.map((d) => d.forecastValue ?? 0));

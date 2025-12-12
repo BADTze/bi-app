@@ -48,23 +48,23 @@ export interface KPIOutlook {
 export interface CapacityPlanning {
   best_electricity_model: string;
   best_natural_gas_model: string; 
-  required_electricity_gj: number;
-  required_natural_gas_gj: number;
-  total_energy_gj_next_year: number;
+  required_electricity_kwh: number;
+  required_natural_gas_mmbtu: number;
+  required_index_energy_gj: number;
 
   peak_load: {
     electricity: {
       month: string | null;
-      value_gj: number | null;
+      value_kwh: number | null;
     };
     natural_gas: {
       month: string | null;
-      value_gj: number | null;
+      value_mmbtu: number | null;
     };
   };
 
-  recommended_capacity_electricity_gj: number | null;
-  recommended_capacity_natural_gas_gj: number | null;
+  recommended_capacity_electricity_kwh: number | null;
+  recommended_capacity_natural_gas_mmbtu: number | null;
 }
 
 /* ------------------------ COST PROJECTION ------------------------ */

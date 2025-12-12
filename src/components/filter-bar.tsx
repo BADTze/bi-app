@@ -44,9 +44,9 @@ const FilterBar: React.FC<FilterBarProps> = ({
           <SelectValue placeholder="Pilih Kategori" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="indexEnergy">Index Energy</SelectItem>
-          <SelectItem value="electricity">Electricity</SelectItem>
-          <SelectItem value="naturalGas">Natural Gas</SelectItem>
+          <SelectItem value="indexEnergy">Index Energy (GJ)</SelectItem>
+          <SelectItem value="electricity">Electricity (kWh)</SelectItem>
+          <SelectItem value="naturalGas">Natural Gas (MMBTU)</SelectItem>
         </SelectContent>
       </Select>
 
